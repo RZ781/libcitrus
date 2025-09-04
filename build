@@ -1,0 +1,11 @@
+#!/bin/sh
+
+gcc -Wall -Wextra -Wpedantic -Iinclude -c -fPIC src/* && \
+ar rcs libcitrus.a *.o && \
+gcc -shared *.o -o libcitrus.so && \
+rm *.o && \
+for test in tests/* ; do
+	gcc -Wall -Wextra -Wpedantic -Iinclude -Wl,-rpath='${ORIGIN}' -L. -lcitrus "$test" -o test && \
+	./test
+done && \
+rm test
