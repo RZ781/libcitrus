@@ -17,9 +17,43 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#ifndef TEST_H
-#define TEST_H
+#ifndef CITRUS_H
+#define CITRUS_H
 
-int f(int x);
+typedef enum {
+	CITRUS_KEY_LEFT,
+	CITRUS_KEY_RIGHT
+} CitrusKey;
+
+typedef struct {
+	const char* piece_data;
+	int n_rotation_states;
+	int width;
+	int height;
+	int spawn_x;
+	int spawn_y;
+} CitrusPiece;
+
+typedef struct {
+	int width;
+	int height;
+	int full_height;
+	const CitrusPiece* (*randomizer)(void);
+} CitrusGameConfig;
+
+typedef struct {
+	CitrusGameConfig config;
+	char* board;
+	const CitrusPiece* current_piece;
+	int current_x;
+	int current_y;
+	int current_rotation;
+} CitrusGame;
+
+void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void));
+void CitrusPiece_init(CitrusPiece* piece, const char* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
+void CitrusGame_init(CitrusGame* game, char* board, CitrusGameConfig config);
+void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
+int CitrusGame_get_cell(CitrusGame* game, int x, int y);
 
 #endif
