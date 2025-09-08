@@ -25,8 +25,28 @@ typedef enum {
 	CITRUS_KEY_RIGHT
 } CitrusKey;
 
+typedef enum {
+	CITRUS_CELL_EMPTY,
+	CITRUS_CELL_FULL
+} CitrusCellType;
+
+typedef enum {
+	CITRUS_COLOUR_I,
+	CITRUS_COLOUR_J,
+	CITRUS_COLOUR_L,
+	CITRUS_COLOUR_O,
+	CITRUS_COLOUR_S,
+	CITRUS_COLOUR_T,
+	CITRUS_COLOUR_Z
+} CitrusColour;
+
 typedef struct {
-	const char* piece_data;
+	CitrusColour colour;
+	CitrusCellType type;
+} CitrusCell;
+
+typedef struct {
+	const CitrusCell* piece_data;
 	int n_rotation_states;
 	int width;
 	int height;
@@ -43,7 +63,7 @@ typedef struct {
 
 typedef struct {
 	CitrusGameConfig config;
-	char* board;
+	CitrusCell* board;
 	const CitrusPiece* current_piece;
 	int current_x;
 	int current_y;
@@ -51,9 +71,9 @@ typedef struct {
 } CitrusGame;
 
 void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void));
-void CitrusPiece_init(CitrusPiece* piece, const char* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
-void CitrusGame_init(CitrusGame* game, char* board, CitrusGameConfig config);
+void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
+void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config);
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
-int CitrusGame_get_cell(CitrusGame* game, int x, int y);
+CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
 
 #endif

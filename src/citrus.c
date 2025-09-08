@@ -26,7 +26,7 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
 	config->randomizer = randomizer;
 }
 
-void CitrusPiece_init(CitrusPiece* piece, const char* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y) {
+void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y) {
 	piece->piece_data = piece_data;
 	piece->n_rotation_states = n_rotation_states;
 	piece->width = width;
@@ -35,7 +35,7 @@ void CitrusPiece_init(CitrusPiece* piece, const char* piece_data, int n_rotation
 	piece->spawn_y = spawn_y;
 }
 
-void CitrusGame_init(CitrusGame* game, char* board, CitrusGameConfig config) {
+void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config) {
 	game->config = config;
 	game->board = board;
 	game->current_piece = config.randomizer();
@@ -53,9 +53,9 @@ int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 	int rotation = game->current_rotation;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			if (game->current_piece->piece_data[rotation * width * height + y * width + x] == 0)
+			if (game->current_piece->piece_data[rotation * width * height + y * width + x].type != CITRUS_CELL_FULL)
 				continue;
-			if (x + game->current_x < 0 || y + game->current_y < 0 || x + game->current_x >= game->config.width || y + game->current_y >= game->config.full_height || game->board[(y + game->current_y) * game->config.width + (x + game->current_x)] != 0) {
+			if (x + game->current_x < 0 || y + game->current_y < 0 || x + game->current_x >= game->config.width || y + game->current_y >= game->config.full_height || game->board[(y + game->current_y) * game->config.width + (x + game->current_x)].type == CITRUS_CELL_FULL) {
 				collided = 1;
 				break;
 			}
@@ -77,6 +77,6 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 	}
 }
 
-int CitrusGame_get_cell(CitrusGame* game, int x, int y) {
+CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y) {
 	return game->board[y * game->config.width + x];
 }
