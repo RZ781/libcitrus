@@ -1,6 +1,9 @@
 # libcitrus
 A C library for implementing modern multiplayer stacker games.
 
+The library currently has an unstable API and ABI - it is not yet ready
+for production use.
+
 libcitrus is free software, distributed under the terms of the GNU
 Lesser General Public License as published by the Free Software
 Foundation, either version 3 of the License or later. See the files
