@@ -35,6 +35,20 @@ void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_ro
 	piece->spawn_y = spawn_y;
 }
 
+void CitrusGame_draw_piece(CitrusGame* game, int clear) {
+	int width = game->current_piece->width;
+	int height = game->current_piece->height;
+	int rotation = game->current_rotation;
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			CitrusCell cell = game->current_piece->piece_data[rotation * width * height + y * width + x];
+			if (cell.type != CITRUS_CELL_FULL)
+				continue;
+			game->board[(y + game->current_y) * game->config.width + (x + game->current_x)] = clear ? (CitrusCell) {.type = CITRUS_CELL_EMPTY} : cell;
+		}
+	}
+}
+
 void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config) {
 	game->config = config;
 	game->board = board;
@@ -42,9 +56,14 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig confi
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
 	game->current_rotation = 0;
+	for (int i = 0; i < config.width * config.full_height; i++) {
+		board[i].type = CITRUS_CELL_EMPTY;
+	}
+	CitrusGame_draw_piece(game, 0);
 }
 
 int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
+	CitrusGame_draw_piece(game, 0);
 	game->current_x += dx;
 	game->current_y += dy;
 	int collided = 0;
@@ -64,8 +83,8 @@ int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 	if (collided) {
 		game->current_x -= dx;
 		game->current_y -= dy;
-		return 0;
 	}
+	CitrusGame_draw_piece(game, 1);
 	return 1;
 }
 
