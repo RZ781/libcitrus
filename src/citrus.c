@@ -85,7 +85,7 @@ int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 		game->current_y -= dy;
 	}
 	CitrusGame_draw_piece(game, 1);
-	return 1;
+	return !collided;
 }
 
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
