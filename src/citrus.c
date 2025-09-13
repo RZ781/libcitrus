@@ -63,7 +63,7 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig confi
 }
 
 int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
-	CitrusGame_draw_piece(game, 0);
+	CitrusGame_draw_piece(game, 1);
 	game->current_x += dx;
 	game->current_y += dy;
 	int collided = 0;
@@ -84,7 +84,7 @@ int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 		game->current_x -= dx;
 		game->current_y -= dy;
 	}
-	CitrusGame_draw_piece(game, 1);
+	CitrusGame_draw_piece(game, 0);
 	return !collided;
 }
 

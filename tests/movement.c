@@ -32,10 +32,10 @@ CitrusCell board[10 * 40];
 void assert_position(int piece_x, int piece_y) {
 	for (int y = 0; y < 40; y++) {
 		for (int x = 0; x < 10; x++) {
-			CitrusCell cell = CitrusGame_get_cell(&game, x, y);
+			CitrusCell current_cell = CitrusGame_get_cell(&game, x, y);
 			CitrusCell expected = (x >= piece_x && y >= piece_y && x <= piece_x + 1 && y <= piece_y + 1) ? cell : (CitrusCell) {.type = CITRUS_CELL_EMPTY};
-			if (cell.type != expected.type) {
-				fprintf(stderr, "assert_position(%i, %i): expected cell type %i at (%i, %i), got %i\n", piece_x, piece_y, expected.type, x, y, cell.type);
+			if (current_cell.type != expected.type) {
+				fprintf(stderr, "assert_position(%i, %i): expected cell type %i at (%i, %i), got %i\n", piece_x, piece_y, expected.type, x, y, current_cell.type);
 				exit(-1);
 			}
 		}
