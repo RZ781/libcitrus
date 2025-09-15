@@ -17,12 +17,12 @@
 # License along with this program.  If not, see
 # <https://www.gnu.org/licenses/>.
 
-gcc -Wall -Wextra -Wpedantic -Iinclude -c -fPIC src/* && \
-ar rcs libcitrus.a *.o && \
-gcc -shared *.o -o libcitrus.so && \
-rm *.o && \
+gcc -Wall -Wextra -Wpedantic -Iinclude -c -fPIC src/* || exit $?
+ar rcs libcitrus.a *.o || exit $?
+gcc -shared *.o -o libcitrus.so || exit $?
+rm *.o || exit $?
 for test in tests/* ; do
-	gcc -Wall -Wextra -Wpedantic -Iinclude -Wl,-rpath='${ORIGIN}' -L. -lcitrus "$test" -o test && \
-	./test
-done && \
+	gcc -Wall -Wextra -Wpedantic -Iinclude -g -Wl,-rpath='${ORIGIN}' -L. -lcitrus "$test" -o test || exit $?
+	./test || exit $?
+done
 rm test
