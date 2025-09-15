@@ -22,7 +22,8 @@
 
 typedef enum {
 	CITRUS_KEY_LEFT,
-	CITRUS_KEY_RIGHT
+	CITRUS_KEY_RIGHT,
+	CITRUS_KEY_HARD_DROP
 } CitrusKey;
 
 typedef enum {

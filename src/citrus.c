@@ -88,11 +88,22 @@ int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 	return !collided;
 }
 
+void CitrusGame_lock_piece(CitrusGame* game) {
+	game->current_piece = game->config.randomizer();
+	game->current_x = game->current_piece->spawn_x;
+	game->current_y = game->current_piece->spawn_y;
+	game->current_rotation = 0;
+	CitrusGame_draw_piece(game, 0);
+}
+
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 	if (key == CITRUS_KEY_LEFT) {
 		CitrusGame_move_piece(game, -1, 0);
 	} else if (key == CITRUS_KEY_RIGHT) {
 		CitrusGame_move_piece(game, 1, 0);
+	} else if (key == CITRUS_KEY_HARD_DROP) {
+		while (CitrusGame_move_piece(game, 0, -1));
+		CitrusGame_lock_piece(game);
 	}
 }
 
