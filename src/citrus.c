@@ -62,11 +62,7 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig confi
 	CitrusGame_draw_piece(game, 0);
 }
 
-int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
-	CitrusGame_draw_piece(game, 1);
-	game->current_x += dx;
-	game->current_y += dy;
-	int collided = 0;
+int CitrusGame_collided(CitrusGame* game) {
 	int width = game->current_piece->width;
 	int height = game->current_piece->height;
 	int rotation = game->current_rotation;
@@ -75,11 +71,18 @@ int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 			if (game->current_piece->piece_data[rotation * width * height + y * width + x].type != CITRUS_CELL_FULL)
 				continue;
 			if (x + game->current_x < 0 || y + game->current_y < 0 || x + game->current_x >= game->config.width || y + game->current_y >= game->config.full_height || game->board[(y + game->current_y) * game->config.width + (x + game->current_x)].type == CITRUS_CELL_FULL) {
-				collided = 1;
-				break;
+				return 1;
 			}
 		}
 	}
+	return 0;
+}
+
+int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
+	CitrusGame_draw_piece(game, 1);
+	game->current_x += dx;
+	game->current_y += dy;
+	int collided = CitrusGame_collided(game);
 	if (collided) {
 		game->current_x -= dx;
 		game->current_y -= dy;
@@ -96,6 +99,17 @@ void CitrusGame_lock_piece(CitrusGame* game) {
 	CitrusGame_draw_piece(game, 0);
 }
 
+void CitrusGame_rotate_piece(CitrusGame* game, int n) {
+	CitrusGame_draw_piece(game, 1);
+	int prev_rotation = game->current_rotation;
+	game->current_rotation += n + game->current_piece->n_rotation_states;
+	game->current_rotation %= game->current_piece->n_rotation_states;
+	if (CitrusGame_collided(game)) {
+		game->current_rotation = prev_rotation;
+	}
+	CitrusGame_draw_piece(game, 0);
+}
+
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 	if (key == CITRUS_KEY_LEFT) {
 		CitrusGame_move_piece(game, -1, 0);
@@ -104,6 +118,10 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 	} else if (key == CITRUS_KEY_HARD_DROP) {
 		while (CitrusGame_move_piece(game, 0, -1));
 		CitrusGame_lock_piece(game);
+	} else if (key == CITRUS_KEY_CLOCKWISE) {
+		CitrusGame_rotate_piece(game, 1);
+	} else if (key == CITRUS_KEY_ANTICLOCKWISE) {
+		CitrusGame_rotate_piece(game, -1);
 	}
 }
 
