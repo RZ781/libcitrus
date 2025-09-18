@@ -17,6 +17,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
+#include <string.h>
 #include "citrus.h"
 
 void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void)) {
@@ -96,6 +97,22 @@ void CitrusGame_lock_piece(CitrusGame* game) {
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
 	game->current_rotation = 0;
+	for (int y = 0; y < game->config.full_height; y++) {
+		int full = 1;
+		for (int x = 0; x < game->config.width; x++) {
+			if (game->board[y * game->config.width + x].type != CITRUS_CELL_FULL) {
+				full = 0;
+				break;
+			}
+		}
+		if (full) {
+			memmove(game->board + y * game->config.width, game->board + (y + 1) * game->config.width, sizeof(CitrusCell) * game->config.width * (game->config.full_height - y - 1));
+			for (int x = 0; x < game->config.width; x++) {
+				game->board[(game->config.full_height - 1) * game->config.width + x].type = CITRUS_CELL_EMPTY;
+			}
+			y--;
+		}
+	}
 	CitrusGame_draw_piece(game, 0);
 }
 
