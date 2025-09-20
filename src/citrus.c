@@ -135,6 +135,8 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 	} else if (key == CITRUS_KEY_HARD_DROP) {
 		while (CitrusGame_move_piece(game, 0, -1));
 		CitrusGame_lock_piece(game);
+	} else if (key == CITRUS_KEY_SOFT_DROP) {
+		while (CitrusGame_move_piece(game, 0, -1));
 	} else if (key == CITRUS_KEY_CLOCKWISE) {
 		CitrusGame_rotate_piece(game, 1);
 	} else if (key == CITRUS_KEY_ANTICLOCKWISE) {
