@@ -50,7 +50,7 @@ void assert_expected(void) {
 		for (int x = 0; x < 10; x++) {
 			CitrusCell cell = board[y * 10 + x];
 			CitrusCell expected_cell = expected_board[y * 10 + x];
-			if (cell.type != expected_cell.type) {
+			if ((cell.type == CITRUS_CELL_FULL) != (expected_cell.type == CITRUS_CELL_FULL)) {
 				fprintf(stderr, "assert_expected(): expected cell type %i at (%i, %i), got %i\n", expected_cell.type, x, y, cell.type);
 				abort();
 			}

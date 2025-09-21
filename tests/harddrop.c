@@ -41,7 +41,10 @@ void assert_expected(void) {
 	}
 }
 
-void add_piece(int x, int y) {
+void add_piece(int x, int y, int type) {
+	CitrusCell cell;
+	cell.type = type;
+	cell.colour = CITRUS_COLOUR_O;
 	expected_board[y * 10 + x] = cell;
 	expected_board[y * 10 + (x + 1)] = cell;
 	expected_board[(y + 1) * 10 + x] = cell;
@@ -61,18 +64,21 @@ int main() {
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		expected_board[i].type = CITRUS_CELL_EMPTY;
 	}
-	add_piece(4, 21);
+	add_piece(4, 21, CITRUS_CELL_FULL);
+	add_piece(4, 0, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
-	add_piece(4, 0);
+	add_piece(4, 0, CITRUS_CELL_FULL);
+	add_piece(4, 2, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
-	add_piece(4, 2);
+	add_piece(4, 2, CITRUS_CELL_FULL);
+	add_piece(4, 4, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
-	add_piece(2, 0);
+	add_piece(2, 0, CITRUS_CELL_FULL);
 	assert_expected();
 	return 0;
 }
