@@ -63,21 +63,22 @@ typedef struct {
 	int width;
 	int height;
 	int full_height;
-	const CitrusPiece* (*randomizer)(void);
+	const CitrusPiece* (*randomizer)(void*);
 } CitrusGameConfig;
 
 typedef struct {
 	CitrusGameConfig config;
 	CitrusCell* board;
+	void* randomizer_data;
 	const CitrusPiece* current_piece;
 	int current_x;
 	int current_y;
 	int current_rotation;
 } CitrusGame;
 
-void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void));
+void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*));
 void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
-void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config);
+void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data);
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
 

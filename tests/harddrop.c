@@ -51,7 +51,8 @@ void add_piece(int x, int y, int type) {
 	expected_board[(y + 1) * 10 + (x + 1)] = cell;
 }
 
-const CitrusPiece* randomizer(void) {
+const CitrusPiece* randomizer(void* data) {
+	(void) data;
 	return &piece;
 }
 
@@ -60,7 +61,7 @@ int main() {
 	CitrusGameConfig config;
 	CitrusGameConfig_init(&config, randomizer);
 	CitrusPiece_init(&piece, piece_data, 1, 2, 2, 4, 21);
-	CitrusGame_init(&game, board, config);
+	CitrusGame_init(&game, board, config, NULL);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		expected_board[i].type = CITRUS_CELL_EMPTY;
 	}

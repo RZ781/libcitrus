@@ -71,7 +71,8 @@ void remove_piece(int x, int y) {
 	expected_board[y * 10 + x] = empty;
 }
 
-const CitrusPiece* randomizer(void) {
+const CitrusPiece* randomizer(void* data) {
+	(void) data;
 	return &piece;
 }
 
@@ -80,7 +81,7 @@ int main() {
 	CitrusGameConfig config;
 	CitrusGameConfig_init(&config, randomizer);
 	CitrusPiece_init(&piece, piece_data, 4, 3, 3, 3, 20);
-	CitrusGame_init(&game, board, config);
+	CitrusGame_init(&game, board, config, NULL);
 
 	clear_board();
 	add_piece(3, 21);

@@ -42,14 +42,15 @@ void assert_position(int piece_x, int piece_y) {
 	}
 }
 
-const CitrusPiece* randomizer(void) {
+const CitrusPiece* randomizer(void* data) {
+	(void) data;
 	return &piece;
 }
 
 int main() {
 	CitrusGameConfig_init(&config, randomizer);
 	CitrusPiece_init(&piece, piece_data, 1, 2, 2, 4, 21);
-	CitrusGame_init(&game, board, config);
+	CitrusGame_init(&game, board, config, NULL);
 	int x = 4;
 	for (int i = 0; i < 4; i++) {
 		CitrusGame_key_down(&game, CITRUS_KEY_LEFT);

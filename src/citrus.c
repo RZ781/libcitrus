@@ -20,7 +20,7 @@
 #include <string.h>
 #include "citrus.h"
 
-void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void)) {
+void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*)) {
 	config->width = 10;
 	config->height = 20;
 	config->full_height = 40;
@@ -82,10 +82,11 @@ void CitrusGame_draw_piece(CitrusGame* game, int clear) {
 	}
 }
 
-void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config) {
+void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data) {
 	game->config = config;
+	game->randomizer_data = randomizer_data;
 	game->board = board;
-	game->current_piece = config.randomizer();
+	game->current_piece = config.randomizer(randomizer_data);
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
 	game->current_rotation = 0;
@@ -109,7 +110,7 @@ int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 }
 
 void CitrusGame_lock_piece(CitrusGame* game) {
-	game->current_piece = game->config.randomizer();
+	game->current_piece = game->config.randomizer(game->randomizer_data);
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
 	game->current_rotation = 0;
