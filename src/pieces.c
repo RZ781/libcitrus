@@ -30,7 +30,7 @@ static const CitrusCell O = {.colour = CITRUS_COLOUR_O, .type = CITRUS_CELL_FULL
 
 // these appear upside down since the beginning of the array is the bottom of the piece
 
-const CitrusCell t_piece_data[4 * 3 * 3] = {
+const CitrusCell citrus_t_piece_data[4 * 3 * 3] = {
 	_, _, _,
 	T, T, T,
 	_, T, _,
@@ -48,7 +48,7 @@ const CitrusCell t_piece_data[4 * 3 * 3] = {
 	_, T, _
 };
 
-const CitrusCell s_piece_data[4 * 3 * 3] = {
+const CitrusCell citrus_s_piece_data[4 * 3 * 3] = {
 	_, _, _,
 	S, S, _,
 	_, S, S,
@@ -66,7 +66,7 @@ const CitrusCell s_piece_data[4 * 3 * 3] = {
 	S, _, _
 };
 
-const CitrusCell z_piece_data[4 * 3 * 3] = {
+const CitrusCell citrus_z_piece_data[4 * 3 * 3] = {
 	_, _, _,
 	_, Z, Z,
 	Z, Z, _,
@@ -84,7 +84,7 @@ const CitrusCell z_piece_data[4 * 3 * 3] = {
 	_, Z, _
 };
 
-const CitrusCell l_piece_data[4 * 3 * 3] = {
+const CitrusCell citrus_l_piece_data[4 * 3 * 3] = {
 	_, _, _,
 	L, L, L,
 	_, _, L,
@@ -102,7 +102,7 @@ const CitrusCell l_piece_data[4 * 3 * 3] = {
 	L, L, _,
 };
 
-const CitrusCell j_piece_data[4 * 3 * 3] = {
+const CitrusCell citrus_j_piece_data[4 * 3 * 3] = {
 	_, _, _,
 	J, J, J,
 	J, _, _,
@@ -120,7 +120,7 @@ const CitrusCell j_piece_data[4 * 3 * 3] = {
 	_, J, _
 };
 
-const CitrusCell i_piece_data[4 * 4 * 4] = {
+const CitrusCell citrus_i_piece_data[4 * 4 * 4] = {
 	_, _, _, _,
 	_, _, _, _,
 	I, I, I, I,
@@ -142,14 +142,14 @@ const CitrusCell i_piece_data[4 * 4 * 4] = {
 	_, I, _, _
 };
 
-const CitrusCell o_piece_data[1 * 2 * 2] = {O, O, O, O};
+const CitrusCell citrus_o_piece_data[1 * 2 * 2] = {O, O, O, O};
 
-const CitrusPiece pieces[7] = {
-	{i_piece_data, 4, 4, 4, 3, 19},
-	{j_piece_data, 4, 3, 3, 3, 20},
-	{l_piece_data, 4, 3, 3, 3, 20},
-	{o_piece_data, 1, 2, 2, 4, 21},
-	{s_piece_data, 4, 3, 3, 3, 20},
-	{t_piece_data, 4, 3, 3, 3, 20},
-	{z_piece_data, 4, 3, 3, 3, 20},
+const CitrusPiece citrus_pieces[7] = {
+	{citrus_i_piece_data, 4, 4, 4, 3, 19},
+	{citrus_j_piece_data, 4, 3, 3, 3, 20},
+	{citrus_l_piece_data, 4, 3, 3, 3, 20},
+	{citrus_o_piece_data, 1, 2, 2, 4, 21},
+	{citrus_s_piece_data, 4, 3, 3, 3, 20},
+	{citrus_t_piece_data, 4, 3, 3, 3, 20},
+	{citrus_z_piece_data, 4, 3, 3, 3, 20},
 };

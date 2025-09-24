@@ -76,7 +76,7 @@ typedef struct {
 	int current_rotation;
 } CitrusGame;
 
-extern const CitrusPiece pieces[7];
+extern const CitrusPiece citrus_pieces[7];
 
 void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*));
 void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
