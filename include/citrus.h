@@ -76,6 +76,12 @@ typedef struct {
 	int current_rotation;
 } CitrusGame;
 
+typedef struct {
+	int state;
+	int chosen_pieces[7];
+	int count;
+} CitrusBagRandomizer;
+
 extern const CitrusPiece citrus_pieces[7];
 
 void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*));
@@ -83,5 +89,7 @@ void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_ro
 void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data);
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
+void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed);
+const CitrusPiece* CitrusBagRandomizer_randomizer(void* data);
 
 #endif

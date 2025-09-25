@@ -17,6 +17,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
+#include <stdlib.h>
 #include <string.h>
 #include "citrus.h"
 
@@ -163,4 +164,25 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y) {
 	return game->board[y * game->config.width + x];
+}
+
+void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed) {
+	memset(bag, 0, sizeof(*bag));
+	bag->state = seed;
+}
+
+const CitrusPiece* CitrusBagRandomizer_randomizer(void* data) {
+	CitrusBagRandomizer* bag = data;
+	if (bag->count == 7) {
+		memset(bag->chosen_pieces, 0, sizeof(bag->chosen_pieces));
+		bag->count = 0;
+	}
+	srand(bag->state);
+	bag->state = rand();
+	while (bag->chosen_pieces[bag->state % 7] != 0) {
+		bag->state++;
+	}
+	bag->chosen_pieces[bag->state % 7] = 1;
+	bag->count++;
+	return citrus_pieces + (bag->state % 7);
 }
