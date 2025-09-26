@@ -24,18 +24,15 @@
 
 CitrusGame game;
 CitrusGameConfig config;
-CitrusPiece piece;
-const CitrusCell cell = {.colour = CITRUS_COLOUR_O, .type = CITRUS_CELL_FULL};
-const CitrusCell piece_data[1 * 2 * 2] = {cell, cell, cell, cell};
 CitrusCell board[10 * 40];
 
 void assert_position(int piece_x, int piece_y) {
 	for (int y = 0; y < 40; y++) {
 		for (int x = 0; x < 10; x++) {
-			CitrusCell current_cell = CitrusGame_get_cell(&game, x, y);
-			CitrusCell expected = (x >= piece_x && y >= piece_y && x <= piece_x + 1 && y <= piece_y + 1) ? cell : (CitrusCell) {.type = CITRUS_CELL_EMPTY};
-			if ((current_cell.type == CITRUS_CELL_FULL) != (expected.type == CITRUS_CELL_FULL)) {
-				fprintf(stderr, "assert_position(%i, %i): expected cell type %i at (%i, %i), got %i\n", piece_x, piece_y, expected.type, x, y, current_cell.type);
+			int cell = CitrusGame_get_cell(&game, x, y).type == CITRUS_CELL_FULL;
+			int expected = x >= piece_x && y >= piece_y && x <= piece_x + 1 && y <= piece_y + 1;
+			if (cell != expected) {
+				fprintf(stderr, "assert_position(%i, %i): expected %s cell at (%i, %i), got %s cell\n", piece_x, piece_y, expected ? "full" : "empty", x, y, cell ? "full" : "empty");
 				exit(-1);
 			}
 		}
@@ -44,12 +41,11 @@ void assert_position(int piece_x, int piece_y) {
 
 const CitrusPiece* randomizer(void* data) {
 	(void) data;
-	return &piece;
+	return citrus_pieces + CITRUS_COLOUR_O;
 }
 
 int main() {
 	CitrusGameConfig_init(&config, randomizer);
-	CitrusPiece_init(&piece, piece_data, 1, 2, 2, 4, 21);
 	CitrusGame_init(&game, board, config, NULL);
 	int x = 4;
 	for (int i = 0; i < 4; i++) {

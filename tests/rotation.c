@@ -22,65 +22,44 @@
 #include <stdlib.h>
 #include "citrus.h"
 
-const CitrusCell cell = {.colour = CITRUS_COLOUR_T, .type = CITRUS_CELL_FULL};
-const CitrusCell empty = {.type = CITRUS_CELL_EMPTY};
-const CitrusCell piece_data[4 * 3 * 3] = {
-	empty, empty, empty,
-	cell,  cell,  cell,
-	empty, cell,  empty,
-
-	empty, cell,  empty,
-	empty, cell,  cell,
-	empty, cell,  empty,
-
-	empty, cell,  empty,
-	cell,  cell,  cell,
-	empty, empty, empty,
-
-	empty, cell,  empty,
-	cell,  cell,  empty,
-	empty, cell,  empty
-};
-CitrusPiece piece;
 CitrusCell board[10 * 40];
 CitrusCell expected_board[10 * 40];
 
 void assert_expected(void) {
 	for (int y = 0; y < 40; y++) {
 		for (int x = 0; x < 10; x++) {
-			CitrusCell cell = board[y * 10 + x];
-			CitrusCell expected_cell = expected_board[y * 10 + x];
-			if ((cell.type == CITRUS_CELL_FULL) != (expected_cell.type == CITRUS_CELL_FULL)) {
-				fprintf(stderr, "assert_expected(): expected cell type %i at (%i, %i), got %i\n", expected_cell.type, x, y, cell.type);
+			int cell = board[y * 10 + x].type == CITRUS_CELL_FULL;
+			int expected = expected_board[y * 10 + x].type == CITRUS_CELL_FULL;
+			if (cell != expected) {
+				fprintf(stderr, "assert_expected(): expected %s cell at (%i, %i), got %s cell\n", expected ? "full" : "empty", x, y, cell ? "full" : "empty");
 				abort();
 			}
 		}
 	}
 }
 
-
 void clear_board(void) {
 	for (int i=0; i<40*10; i++)
 		expected_board[i].type = CITRUS_CELL_EMPTY;
 }
 void add_piece(int x, int y) {
-	expected_board[y * 10 + x] = cell;
+	expected_board[y * 10 + x].type = CITRUS_CELL_FULL;
+	expected_board[y * 10 + x].colour = CITRUS_COLOUR_T;
 }
 
 void remove_piece(int x, int y) {
-	expected_board[y * 10 + x] = empty;
+	expected_board[y * 10 + x].type = CITRUS_CELL_EMPTY;
 }
 
 const CitrusPiece* randomizer(void* data) {
 	(void) data;
-	return &piece;
+	return citrus_pieces + CITRUS_COLOUR_T;
 }
 
 int main() {
 	CitrusGame game;
 	CitrusGameConfig config;
 	CitrusGameConfig_init(&config, randomizer);
-	CitrusPiece_init(&piece, piece_data, 4, 3, 3, 3, 20);
 	CitrusGame_init(&game, board, config, NULL);
 
 	clear_board();

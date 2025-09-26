@@ -22,9 +22,6 @@
 #include <stdlib.h>
 #include "citrus.h"
 
-const CitrusCell cell = {.colour = CITRUS_COLOUR_O, .type = CITRUS_CELL_FULL};
-const CitrusCell piece_data[1 * 2 * 2] = {cell, cell, cell, cell};
-CitrusPiece piece;
 CitrusCell board[10 * 40];
 CitrusCell expected_board[10 * 40];
 
@@ -53,14 +50,13 @@ void add_piece(int x, int y, int type) {
 
 const CitrusPiece* randomizer(void* data) {
 	(void) data;
-	return &piece;
+	return citrus_pieces + CITRUS_COLOUR_O;
 }
 
 int main() {
 	CitrusGame game;
 	CitrusGameConfig config;
 	CitrusGameConfig_init(&config, randomizer);
-	CitrusPiece_init(&piece, piece_data, 1, 2, 2, 4, 21);
 	CitrusGame_init(&game, board, config, NULL);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		expected_board[i].type = CITRUS_CELL_EMPTY;
