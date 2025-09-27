@@ -38,7 +38,7 @@ void assert_expected(void) {
 	}
 }
 
-void add_piece(int x, int y, int type) {
+void add_piece(int x, int y, CitrusCellType type) {
 	CitrusCell cell;
 	cell.type = type;
 	cell.colour = CITRUS_COLOUR_O;

@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include "citrus.h"
 
@@ -29,8 +30,8 @@ CitrusCell board[10 * 40];
 void assert_position(int piece_x, int piece_y) {
 	for (int y = 0; y < 40; y++) {
 		for (int x = 0; x < 10; x++) {
-			int cell = CitrusGame_get_cell(&game, x, y).type == CITRUS_CELL_FULL;
-			int expected = x >= piece_x && y >= piece_y && x <= piece_x + 1 && y <= piece_y + 1;
+			bool cell = CitrusGame_get_cell(&game, x, y).type == CITRUS_CELL_FULL;
+			bool expected = x >= piece_x && y >= piece_y && x <= piece_x + 1 && y <= piece_y + 1;
 			if (cell != expected) {
 				fprintf(stderr, "assert_position(%i, %i): expected %s cell at (%i, %i), got %s cell\n", piece_x, piece_y, expected ? "full" : "empty", x, y, cell ? "full" : "empty");
 				exit(-1);

@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include "citrus.h"
 
@@ -28,8 +29,8 @@ CitrusCell expected_board[10 * 40];
 void assert_expected(void) {
 	for (int y = 0; y < 40; y++) {
 		for (int x = 0; x < 10; x++) {
-			int cell = board[y * 10 + x].type == CITRUS_CELL_FULL;
-			int expected = expected_board[y * 10 + x].type == CITRUS_CELL_FULL;
+			bool cell = board[y * 10 + x].type == CITRUS_CELL_FULL;
+			bool expected = expected_board[y * 10 + x].type == CITRUS_CELL_FULL;
 			if (cell != expected) {
 				fprintf(stderr, "assert_expected(): expected %s cell at (%i, %i), got %s cell\n", expected ? "full" : "empty", x, y, cell ? "full" : "empty");
 				abort();

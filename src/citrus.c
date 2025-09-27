@@ -17,6 +17,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include "citrus.h"
@@ -37,7 +38,7 @@ void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_ro
 	piece->spawn_y = spawn_y;
 }
 
-int CitrusGame_collided(CitrusGame* game) {
+bool CitrusGame_collided(CitrusGame* game) {
 	int width = game->current_piece->width;
 	int height = game->current_piece->height;
 	int rotation = game->current_rotation;
@@ -46,14 +47,14 @@ int CitrusGame_collided(CitrusGame* game) {
 			if (game->current_piece->piece_data[rotation * width * height + y * width + x].type != CITRUS_CELL_FULL)
 				continue;
 			if (x + game->current_x < 0 || y + game->current_y < 0 || x + game->current_x >= game->config.width || y + game->current_y >= game->config.full_height || game->board[(y + game->current_y) * game->config.width + (x + game->current_x)].type == CITRUS_CELL_FULL) {
-				return 1;
+				return true;
 			}
 		}
 	}
-	return 0;
+	return false;
 }
 
-void CitrusGame_draw_piece_inner(CitrusGame* game, int type) {
+void CitrusGame_draw_piece_inner(CitrusGame* game, CitrusCellType type) {
 	int width = game->current_piece->width;
 	int height = game->current_piece->height;
 	int rotation = game->current_rotation;
@@ -67,7 +68,7 @@ void CitrusGame_draw_piece_inner(CitrusGame* game, int type) {
 	}
 }
 
-void CitrusGame_draw_piece(CitrusGame* game, int clear) {
+void CitrusGame_draw_piece(CitrusGame* game, bool clear) {
 	if (clear) {
 		CitrusGame_draw_piece_inner(game, CITRUS_CELL_EMPTY);
 	}
@@ -94,19 +95,19 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig confi
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
 	}
-	CitrusGame_draw_piece(game, 0);
+	CitrusGame_draw_piece(game, false);
 }
 
-int CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
-	CitrusGame_draw_piece(game, 1);
+bool CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
+	CitrusGame_draw_piece(game, true);
 	game->current_x += dx;
 	game->current_y += dy;
-	int collided = CitrusGame_collided(game);
+	bool collided = CitrusGame_collided(game);
 	if (collided) {
 		game->current_x -= dx;
 		game->current_y -= dy;
 	}
-	CitrusGame_draw_piece(game, 0);
+	CitrusGame_draw_piece(game, false);
 	return !collided;
 }
 
@@ -131,18 +132,18 @@ void CitrusGame_lock_piece(CitrusGame* game) {
 			y--;
 		}
 	}
-	CitrusGame_draw_piece(game, 0);
+	CitrusGame_draw_piece(game, false);
 }
 
 void CitrusGame_rotate_piece(CitrusGame* game, int n) {
-	CitrusGame_draw_piece(game, 1);
+	CitrusGame_draw_piece(game, true);
 	int prev_rotation = game->current_rotation;
 	game->current_rotation += n + game->current_piece->n_rotation_states;
 	game->current_rotation %= game->current_piece->n_rotation_states;
 	if (CitrusGame_collided(game)) {
 		game->current_rotation = prev_rotation;
 	}
-	CitrusGame_draw_piece(game, 0);
+	CitrusGame_draw_piece(game, false);
 }
 
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
