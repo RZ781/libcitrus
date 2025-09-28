@@ -92,6 +92,7 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig confi
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
 	game->current_rotation = 0;
+	game->alive = true;
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
 	}
@@ -132,6 +133,10 @@ void CitrusGame_lock_piece(CitrusGame* game) {
 			y--;
 		}
 	}
+	if (CitrusGame_collided(game)) {
+		game->alive = false;
+		return;
+	}
 	CitrusGame_draw_piece(game, false);
 }
 
@@ -147,6 +152,8 @@ void CitrusGame_rotate_piece(CitrusGame* game, int n) {
 }
 
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
+	if (!game->alive)
+		return;
 	if (key == CITRUS_KEY_LEFT) {
 		CitrusGame_move_piece(game, -1, 0);
 	} else if (key == CITRUS_KEY_RIGHT) {
@@ -165,6 +172,10 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y) {
 	return game->board[y * game->config.width + x];
+}
+
+bool CitrusGame_is_alive(CitrusGame* game) {
+	return game->alive;
 }
 
 void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed) {

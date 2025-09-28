@@ -20,6 +20,8 @@
 #ifndef CITRUS_H
 #define CITRUS_H
 
+#include <stdbool.h>
+
 typedef enum {
 	CITRUS_KEY_LEFT,
 	CITRUS_KEY_RIGHT,
@@ -74,6 +76,7 @@ typedef struct {
 	int current_x;
 	int current_y;
 	int current_rotation;
+	bool alive;
 } CitrusGame;
 
 typedef struct {
@@ -88,6 +91,7 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
 void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
 void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data);
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
+bool CitrusGame_is_alive(CitrusGame* game);
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
 void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed);
 const CitrusPiece* CitrusBagRandomizer_randomizer(void* data);
