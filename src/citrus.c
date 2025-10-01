@@ -26,6 +26,7 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
 	config->width = 10;
 	config->height = 20;
 	config->full_height = 40;
+	config->gravity = 1.0 / 60.0;
 	config->randomizer = randomizer;
 }
 
@@ -72,7 +73,7 @@ void CitrusGame_draw_piece(CitrusGame* game, bool clear) {
 	if (clear) {
 		CitrusGame_draw_piece_inner(game, CITRUS_CELL_EMPTY);
 	}
-	int y = game->current_y;
+	double y = game->current_y;
 	while (!CitrusGame_collided(game)) {
 		game->current_y--;
 	}
@@ -93,6 +94,7 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig confi
 	game->current_y = game->current_piece->spawn_y;
 	game->current_rotation = 0;
 	game->alive = true;
+	game->fall_amount = 0;
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
 	}
@@ -168,6 +170,21 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 	} else if (key == CITRUS_KEY_ANTICLOCKWISE) {
 		CitrusGame_rotate_piece(game, -1);
 	}
+}
+
+void CitrusGame_tick(CitrusGame* game) {
+	CitrusGame_draw_piece(game, true);
+	game->fall_amount += game->config.gravity;
+	while (game->fall_amount >= 1) {
+		game->fall_amount -= 1;
+		game->current_y--;
+		if (CitrusGame_collided(game)) {
+			game->current_y++;
+			game->fall_amount = 0;
+			break;
+		}
+	}
+	CitrusGame_draw_piece(game, false);
 }
 
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y) {
