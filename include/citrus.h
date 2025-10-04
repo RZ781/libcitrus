@@ -21,6 +21,9 @@
 #define CITRUS_H
 
 #include <stdbool.h>
+#include <stdint.h>
+
+#define CITRUS_PARSER_BUFFER_SIZE 16
 
 typedef enum {
 	CITRUS_KEY_LEFT,
@@ -82,6 +85,32 @@ typedef struct {
 } CitrusGame;
 
 typedef struct {
+	uint8_t buffer[CITRUS_PARSER_BUFFER_SIZE];
+	int write_pointer;
+	int read_pointer;
+} CitrusParser;
+
+typedef struct {
+	bool in_game_clients[256];
+	bool connected_clients[256];
+	CitrusGame games[256];
+} CitrusLobby;
+
+typedef struct {
+	CitrusLobby lobby;
+	CitrusParser parser;
+	void (*send)(void* send_data, int n, uint8_t* data);
+	void* send_data;
+} CitrusClientLobby;
+
+typedef struct {
+	CitrusLobby lobby;
+	CitrusParser parsers[256];
+	void (*send)(void* send_data, int n, uint8_t* data, int id);
+	void* send_data;
+} CitrusServerLobby;
+
+typedef struct {
 	int state;
 	int chosen_pieces[7];
 	int count;
@@ -90,12 +119,23 @@ typedef struct {
 extern const CitrusPiece citrus_pieces[7];
 
 void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*));
+
 void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
+
 void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data);
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
 void CitrusGame_tick(CitrusGame* game);
 bool CitrusGame_is_alive(CitrusGame* game);
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
+
+void CitrusClientLobby_init(CitrusClientLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data), void* send_data);
+void CitrusClientLobby_recv(CitrusClientLobby* lobby, int n, uint8_t* data);
+
+void CitrusServerLobby_init(CitrusServerLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data, int id), void* send_data);
+void CitrusServerLobby_client_connect(CitrusServerLobby* lobby, int id);
+void CitrusServerLobby_client_disconnect(CitrusServerLobby* lobby, int id);
+void CitrusServerLobby_recv(CitrusServerLobby* lobby, int n, uint8_t* data, int id);
+
 void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed);
 const CitrusPiece* CitrusBagRandomizer_randomizer(void* data);
 
