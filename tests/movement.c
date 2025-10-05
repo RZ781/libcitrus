@@ -42,7 +42,7 @@ void assert_position(int piece_x, int piece_y) {
 
 const CitrusPiece* randomizer(void* data) {
 	(void) data;
-	return citrus_pieces + CITRUS_COLOUR_O;
+	return citrus_pieces + CITRUS_COLOR_O;
 }
 
 int main() {

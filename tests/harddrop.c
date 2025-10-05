@@ -41,7 +41,7 @@ void assert_expected(void) {
 void add_piece(int x, int y, CitrusCellType type) {
 	CitrusCell cell;
 	cell.type = type;
-	cell.colour = CITRUS_COLOUR_O;
+	cell.color = CITRUS_COLOR_O;
 	expected_board[y * 10 + x] = cell;
 	expected_board[y * 10 + (x + 1)] = cell;
 	expected_board[(y + 1) * 10 + x] = cell;
@@ -50,7 +50,7 @@ void add_piece(int x, int y, CitrusCellType type) {
 
 const CitrusPiece* randomizer(void* data) {
 	(void) data;
-	return citrus_pieces + CITRUS_COLOUR_O;
+	return citrus_pieces + CITRUS_COLOR_O;
 }
 
 int main() {

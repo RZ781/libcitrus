@@ -45,7 +45,7 @@ void clear_board(void) {
 }
 void add_piece(int x, int y) {
 	expected_board[y * 10 + x].type = CITRUS_CELL_FULL;
-	expected_board[y * 10 + x].colour = CITRUS_COLOUR_T;
+	expected_board[y * 10 + x].color = CITRUS_COLOR_T;
 }
 
 void remove_piece(int x, int y) {
@@ -54,7 +54,7 @@ void remove_piece(int x, int y) {
 
 const CitrusPiece* randomizer(void* data) {
 	(void) data;
-	return citrus_pieces + CITRUS_COLOUR_T;
+	return citrus_pieces + CITRUS_COLOR_T;
 }
 
 int main() {

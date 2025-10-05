@@ -20,13 +20,13 @@
 #include "citrus.h"
 
 static const CitrusCell _ = {.type = CITRUS_CELL_EMPTY};
-static const CitrusCell T = {.colour = CITRUS_COLOUR_T, .type = CITRUS_CELL_FULL};
-static const CitrusCell S = {.colour = CITRUS_COLOUR_S, .type = CITRUS_CELL_FULL};
-static const CitrusCell Z = {.colour = CITRUS_COLOUR_Z, .type = CITRUS_CELL_FULL};
-static const CitrusCell J = {.colour = CITRUS_COLOUR_J, .type = CITRUS_CELL_FULL};
-static const CitrusCell L = {.colour = CITRUS_COLOUR_L, .type = CITRUS_CELL_FULL};
-static const CitrusCell I = {.colour = CITRUS_COLOUR_I, .type = CITRUS_CELL_FULL};
-static const CitrusCell O = {.colour = CITRUS_COLOUR_O, .type = CITRUS_CELL_FULL};
+static const CitrusCell T = {.color = CITRUS_COLOR_T, .type = CITRUS_CELL_FULL};
+static const CitrusCell S = {.color = CITRUS_COLOR_S, .type = CITRUS_CELL_FULL};
+static const CitrusCell Z = {.color = CITRUS_COLOR_Z, .type = CITRUS_CELL_FULL};
+static const CitrusCell J = {.color = CITRUS_COLOR_J, .type = CITRUS_CELL_FULL};
+static const CitrusCell L = {.color = CITRUS_COLOR_L, .type = CITRUS_CELL_FULL};
+static const CitrusCell I = {.color = CITRUS_COLOR_I, .type = CITRUS_CELL_FULL};
+static const CitrusCell O = {.color = CITRUS_COLOR_O, .type = CITRUS_CELL_FULL};
 
 // these appear upside down since the beginning of the array is the bottom of the piece
 

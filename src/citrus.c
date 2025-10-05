@@ -64,7 +64,7 @@ void CitrusGame_draw_piece_inner(CitrusGame* game, CitrusCellType type) {
 			CitrusCell cell = game->current_piece->piece_data[rotation * width * height + y * width + x];
 			if (cell.type != CITRUS_CELL_FULL)
 				continue;
-			game->board[(y + game->current_y) * game->config.width + (x + game->current_x)] = (CitrusCell) {.type = type, .colour = cell.colour};
+			game->board[(y + game->current_y) * game->config.width + (x + game->current_x)] = (CitrusCell) {.type = type, .color = cell.color};
 		}
 	}
 }

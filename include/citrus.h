@@ -41,17 +41,17 @@ typedef enum {
 } CitrusCellType;
 
 typedef enum {
-	CITRUS_COLOUR_I,
-	CITRUS_COLOUR_J,
-	CITRUS_COLOUR_L,
-	CITRUS_COLOUR_O,
-	CITRUS_COLOUR_S,
-	CITRUS_COLOUR_T,
-	CITRUS_COLOUR_Z
-} CitrusColour;
+	CITRUS_COLOR_I,
+	CITRUS_COLOR_J,
+	CITRUS_COLOR_L,
+	CITRUS_COLOR_O,
+	CITRUS_COLOR_S,
+	CITRUS_COLOR_T,
+	CITRUS_COLOR_Z
+} CitrusColor;
 
 typedef struct {
-	CitrusColour colour;
+	CitrusColor color;
 	CitrusCellType type;
 } CitrusCell;
 
@@ -118,25 +118,95 @@ typedef struct {
 
 extern const CitrusPiece citrus_pieces[7];
 
+/**
+ * @brief Initializes a CitrusGameConfig struct.
+ *
+ * @param config Struct to be initialized
+ * @param randomizer Randomizer function that accepts a void pointer passed in CitrusGame_init
+ */
 void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*));
 
+/**
+ * @brief Initializes a CitrusPiece struct.
+ *
+ * @param piece Struct to be initialized
+ * @param piece_data Array of n_rotation_states*width*height cells representing the piece in each rotation state
+ * @param n_rotation_states Number of rotation states the piece has
+ * @param width Width of the piece
+ * @param height Height of the piece
+ * @param spawn_x X coordinate for when the piece enters
+ * @param spawn_y Y coordinate for when the piece enters
+ */
 void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
 
+/**
+ * @brief Initializes a CitrusGame struct.
+ *
+ * @param game Struct to be initialized
+ * @param board Array of config.width*config.full_height cells that will be used to store the board
+ * @param config Configuration options
+ * @param randomizer_data Private internal state for randomizer function passed in config.randomizer
+ */
 void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data);
+
+/**
+ * @brief Indicates a key has been pressed.
+ * This should be called by the client whenever a key is pressed.
+ *
+ * @param game Game where key was pressed
+ * @param key Key that has been pressed
+ */
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
+
+/**
+ * @brief Indicates a tick has passed.
+ * This should called by the client 60 times per second.
+ *
+ * @param game Game to update
+ */
 void CitrusGame_tick(CitrusGame* game);
+
+/**
+ * @brief Returns whether or not the player is alive.
+ * Functions including CitrusGame_key_down and CitrusGame_tick will not do anything if the player is dead.
+ *
+ * @param game Game to check
+ * @retval true The player is still alive
+ * @retval false The player has died
+ */
 bool CitrusGame_is_alive(CitrusGame* game);
+
+/**
+ * @brief Gets the cell at a location.
+ *
+ * @param game Game to check
+ * @param x X coordinate of the cell
+ * @param y Y coordinate of the cell
+ * @return Cell at the specified location
+ */
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
+
+/**
+ * @brief Initializes a CitrusBagRandomizer struct
+ *
+ * @param bag Struct to be initialized
+ * @param seedd Seed for the random number generator
+ */
+void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed);
+
+/**
+ * @brief Returns the next piece in the bag.
+ * This can be passed to CitrusGameConfig_init as the randomizer callback function.
+ *
+ * @param data Pointer to CitrusBagRandomizer
+ */
+const CitrusPiece* CitrusBagRandomizer_randomizer(void* data);
 
 void CitrusClientLobby_init(CitrusClientLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data), void* send_data);
 void CitrusClientLobby_recv(CitrusClientLobby* lobby, int n, uint8_t* data);
-
 void CitrusServerLobby_init(CitrusServerLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data, int id), void* send_data);
 void CitrusServerLobby_client_connect(CitrusServerLobby* lobby, int id);
 void CitrusServerLobby_client_disconnect(CitrusServerLobby* lobby, int id);
 void CitrusServerLobby_recv(CitrusServerLobby* lobby, int n, uint8_t* data, int id);
-
-void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed);
-const CitrusPiece* CitrusBagRandomizer_randomizer(void* data);
 
 #endif
