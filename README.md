@@ -1,5 +1,6 @@
 # libcitrus
-A C library for implementing modern multiplayer stacker games.
+A C library for implementing modern multiplayer stacker games. To see
+libcitrus in use, check out [txtris](https://github.com/RZ781/txtris).
 
 The library currently has an unstable API and ABI - it is not yet ready
 for production use.
