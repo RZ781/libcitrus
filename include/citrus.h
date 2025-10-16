@@ -69,6 +69,8 @@ typedef struct {
 	int height;
 	int full_height;
 	double gravity;
+	int lock_delay;
+	int max_move_reset;
 	const CitrusPiece* (*randomizer)(void*);
 } CitrusGameConfig;
 
@@ -82,6 +84,9 @@ typedef struct {
 	double fall_amount;
 	int current_rotation;
 	bool alive;
+	int lock_delay;
+	int move_reset_count;
+	int lowest_y;
 } CitrusGame;
 
 typedef struct {

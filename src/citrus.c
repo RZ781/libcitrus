@@ -27,6 +27,8 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
 	config->height = 20;
 	config->full_height = 40;
 	config->gravity = 1.0 / 60.0;
+	config->max_move_reset = 15;
+	config->lock_delay = 30;
 	config->randomizer = randomizer;
 }
 
@@ -73,7 +75,7 @@ void CitrusGame_draw_piece(CitrusGame* game, bool clear) {
 	if (clear) {
 		CitrusGame_draw_piece_inner(game, CITRUS_CELL_EMPTY);
 	}
-	double y = game->current_y;
+	int y = game->current_y;
 	while (!CitrusGame_collided(game)) {
 		game->current_y--;
 	}
@@ -92,9 +94,12 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig confi
 	game->current_piece = config.randomizer(randomizer_data);
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
+	game->lowest_y = game->current_y;
 	game->current_rotation = 0;
 	game->alive = true;
 	game->fall_amount = 0;
+	game->move_reset_count = 0;
+	game->lock_delay = config.lock_delay;
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
 	}
@@ -110,6 +115,11 @@ bool CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 		game->current_x -= dx;
 		game->current_y -= dy;
 	}
+	if (game->current_y < game->lowest_y) {
+		game->lowest_y = game->current_y;
+		game->move_reset_count = 0;
+		game->lock_delay = game->config.lock_delay;
+	}
 	CitrusGame_draw_piece(game, false);
 	return !collided;
 }
@@ -118,7 +128,10 @@ void CitrusGame_lock_piece(CitrusGame* game) {
 	game->current_piece = game->config.randomizer(game->randomizer_data);
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
+	game->lowest_y = game->current_y;
 	game->current_rotation = 0;
+	game->lock_delay = game->config.lock_delay;
+	game->move_reset_count = 0;
 	for (int y = 0; y < game->config.full_height; y++) {
 		int full = 1;
 		for (int x = 0; x < game->config.width; x++) {
@@ -142,49 +155,62 @@ void CitrusGame_lock_piece(CitrusGame* game) {
 	CitrusGame_draw_piece(game, false);
 }
 
-void CitrusGame_rotate_piece(CitrusGame* game, int n) {
+bool CitrusGame_rotate_piece(CitrusGame* game, int n) {
+	bool success = true;
 	CitrusGame_draw_piece(game, true);
 	int prev_rotation = game->current_rotation;
 	game->current_rotation += n + game->current_piece->n_rotation_states;
 	game->current_rotation %= game->current_piece->n_rotation_states;
 	if (CitrusGame_collided(game)) {
 		game->current_rotation = prev_rotation;
+		success = false;
 	}
 	CitrusGame_draw_piece(game, false);
+	return success;
 }
 
 void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 	if (!game->alive)
 		return;
+	bool moved = false;
 	if (key == CITRUS_KEY_LEFT) {
-		CitrusGame_move_piece(game, -1, 0);
+		moved = CitrusGame_move_piece(game, -1, 0);
 	} else if (key == CITRUS_KEY_RIGHT) {
-		CitrusGame_move_piece(game, 1, 0);
+		moved = CitrusGame_move_piece(game, 1, 0);
 	} else if (key == CITRUS_KEY_HARD_DROP) {
 		while (CitrusGame_move_piece(game, 0, -1));
 		CitrusGame_lock_piece(game);
 	} else if (key == CITRUS_KEY_SOFT_DROP) {
 		while (CitrusGame_move_piece(game, 0, -1));
 	} else if (key == CITRUS_KEY_CLOCKWISE) {
-		CitrusGame_rotate_piece(game, 1);
+		moved = CitrusGame_rotate_piece(game, 1);
 	} else if (key == CITRUS_KEY_ANTICLOCKWISE) {
-		CitrusGame_rotate_piece(game, -1);
+		moved = CitrusGame_rotate_piece(game, -1);
+	}
+	if (moved && game->move_reset_count < game->config.max_move_reset) {
+		game->lock_delay = game->config.lock_delay;
+		game->move_reset_count++;
 	}
 }
 
 void CitrusGame_tick(CitrusGame* game) {
 	CitrusGame_draw_piece(game, true);
-	game->fall_amount += game->config.gravity;
-	while (game->fall_amount >= 1) {
-		game->fall_amount -= 1;
-		game->current_y--;
-		if (CitrusGame_collided(game)) {
-			game->current_y++;
-			game->fall_amount = 0;
-			break;
+	game->current_y--;
+	bool on_ground = CitrusGame_collided(game);
+	game->current_y++;
+	CitrusGame_draw_piece(game, false);
+	if (on_ground) {
+		game->lock_delay--;
+		if (game->lock_delay == 0) {
+			CitrusGame_lock_piece(game);
+		}
+	} else {
+		game->fall_amount += game->config.gravity;
+		while (game->fall_amount >= 1) {
+			game->fall_amount -= 1;
+			CitrusGame_move_piece(game, 0, -1);
 		}
 	}
-	CitrusGame_draw_piece(game, false);
 }
 
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y) {
