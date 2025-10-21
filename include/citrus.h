@@ -31,7 +31,8 @@ typedef enum {
 	CITRUS_KEY_HARD_DROP,
 	CITRUS_KEY_SOFT_DROP,
 	CITRUS_KEY_CLOCKWISE,
-	CITRUS_KEY_ANTICLOCKWISE
+	CITRUS_KEY_ANTICLOCKWISE,
+	CITRUS_KEY_HOLD
 } CitrusKey;
 
 typedef enum {
@@ -79,6 +80,7 @@ typedef struct {
 	CitrusCell* board;
 	void* randomizer_data;
 	const CitrusPiece* current_piece;
+	const CitrusPiece* hold_piece;
 	int current_x;
 	int current_y;
 	double fall_amount;
