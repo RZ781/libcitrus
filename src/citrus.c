@@ -87,20 +87,24 @@ void CitrusGame_draw_piece(CitrusGame* game, bool clear) {
 	}
 }
 
+void CitrusGame_reset_piece(CitrusGame* game) {
+	game->current_x = game->current_piece->spawn_x;
+	game->current_y = game->current_piece->spawn_y;
+	game->fall_amount = 0;
+	game->current_rotation = 0;
+	game->lock_delay = game->config.lock_delay;
+	game->move_reset_count = 0;
+	game->lowest_y = game->current_y;
+}
+
 void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data) {
 	game->config = config;
 	game->randomizer_data = randomizer_data;
 	game->board = board;
 	game->current_piece = config.randomizer(randomizer_data);
 	game->hold_piece = NULL;
-	game->current_x = game->current_piece->spawn_x;
-	game->current_y = game->current_piece->spawn_y;
-	game->lowest_y = game->current_y;
-	game->current_rotation = 0;
 	game->alive = true;
-	game->fall_amount = 0;
-	game->move_reset_count = 0;
-	game->lock_delay = config.lock_delay;
+	CitrusGame_reset_piece(game);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
 	}
@@ -127,12 +131,7 @@ bool CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 
 void CitrusGame_lock_piece(CitrusGame* game) {
 	game->current_piece = game->config.randomizer(game->randomizer_data);
-	game->current_x = game->current_piece->spawn_x;
-	game->current_y = game->current_piece->spawn_y;
-	game->lowest_y = game->current_y;
-	game->current_rotation = 0;
-	game->lock_delay = game->config.lock_delay;
-	game->move_reset_count = 0;
+	CitrusGame_reset_piece(game);
 	for (int y = 0; y < game->config.full_height; y++) {
 		int full = 1;
 		for (int x = 0; x < game->config.width; x++) {
@@ -203,12 +202,7 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 			} else {
 				game->current_piece = piece;
 			}
-			game->current_x = game->current_piece->spawn_x;
-			game->current_y = game->current_piece->spawn_y;
-			game->lowest_y = game->current_y;
-			game->current_rotation = 0;
-			game->lock_delay = game->config.lock_delay;
-			game->move_reset_count = 0;
+			CitrusGame_reset_piece(game);
 			CitrusGame_draw_piece(game, false);
 			break;
 	}
