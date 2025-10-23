@@ -81,6 +81,7 @@ typedef struct {
 	void* randomizer_data;
 	const CitrusPiece* current_piece;
 	const CitrusPiece* hold_piece;
+	bool held;
 	int current_x;
 	int current_y;
 	double fall_amount;

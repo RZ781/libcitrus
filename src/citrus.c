@@ -91,6 +91,7 @@ void CitrusGame_reset_piece(CitrusGame* game) {
 	game->current_x = game->current_piece->spawn_x;
 	game->current_y = game->current_piece->spawn_y;
 	game->fall_amount = 0;
+	game->held = false;
 	game->current_rotation = 0;
 	game->lock_delay = game->config.lock_delay;
 	game->move_reset_count = 0;
@@ -194,6 +195,9 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 			moved = CitrusGame_rotate_piece(game, -1);
 			break;
 		case CITRUS_KEY_HOLD:
+			if (game->held) {
+				break;
+			}
 			CitrusGame_draw_piece(game, true);
 			const CitrusPiece* piece = game->hold_piece;
 			game->hold_piece = game->current_piece;
@@ -204,6 +208,7 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 			}
 			CitrusGame_reset_piece(game);
 			CitrusGame_draw_piece(game, false);
+			game->held = true;
 			break;
 	}
 	if (moved && game->move_reset_count < game->config.max_move_reset) {
