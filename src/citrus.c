@@ -89,7 +89,7 @@ void CitrusGame_draw_piece(CitrusGame* game, bool clear) {
 
 void CitrusGame_reset_piece(CitrusGame* game) {
 	game->current_x = game->current_piece->spawn_x;
-	game->current_y = game->current_piece->spawn_y;
+	game->current_y = game->current_piece->spawn_y + game->config.height;
 	game->fall_amount = 0;
 	game->held = false;
 	game->current_rotation = 0;
