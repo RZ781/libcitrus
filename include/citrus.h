@@ -61,7 +61,6 @@ typedef struct {
 	int n_rotation_states;
 	int width;
 	int height;
-	int spawn_x;
 	int spawn_y;
 } CitrusPiece;
 
@@ -142,10 +141,9 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
  * @param n_rotation_states Number of rotation states the piece has
  * @param width Width of the piece
  * @param height Height of the piece
- * @param spawn_x X coordinate for when the piece enters
- * @param spawn_y Y coordinate for when the piece enters
+ * @param spawn_y Y coordinate relative to board height for when the piece enters
  */
-void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y);
+void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_y);
 
 /**
  * @brief Initializes a CitrusGame struct.

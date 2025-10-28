@@ -32,12 +32,11 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
 	config->randomizer = randomizer;
 }
 
-void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_x, int spawn_y) {
+void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_y) {
 	piece->piece_data = piece_data;
 	piece->n_rotation_states = n_rotation_states;
 	piece->width = width;
 	piece->height = height;
-	piece->spawn_x = spawn_x;
 	piece->spawn_y = spawn_y;
 }
 
@@ -88,7 +87,7 @@ void CitrusGame_draw_piece(CitrusGame* game, bool clear) {
 }
 
 void CitrusGame_reset_piece(CitrusGame* game) {
-	game->current_x = game->current_piece->spawn_x;
+	game->current_x = (game->config.width - game->current_piece->width) / 2;
 	game->current_y = game->current_piece->spawn_y + game->config.height;
 	game->fall_amount = 0;
 	game->held = false;

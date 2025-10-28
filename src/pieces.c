@@ -145,11 +145,11 @@ const CitrusCell citrus_i_piece_data[4 * 4 * 4] = {
 const CitrusCell citrus_o_piece_data[1 * 2 * 2] = {O, O, O, O};
 
 const CitrusPiece citrus_pieces[7] = {
-	{citrus_i_piece_data, 4, 4, 4, 3, -1},
-	{citrus_j_piece_data, 4, 3, 3, 3, 0},
-	{citrus_l_piece_data, 4, 3, 3, 3, 0},
-	{citrus_o_piece_data, 1, 2, 2, 4, 1},
-	{citrus_s_piece_data, 4, 3, 3, 3, 0},
-	{citrus_t_piece_data, 4, 3, 3, 3, 0},
-	{citrus_z_piece_data, 4, 3, 3, 3, 0},
+	{citrus_i_piece_data, 4, 4, 4, -1},
+	{citrus_j_piece_data, 4, 3, 3, 0},
+	{citrus_l_piece_data, 4, 3, 3, 0},
+	{citrus_o_piece_data, 1, 2, 2, 1},
+	{citrus_s_piece_data, 4, 3, 3, 0},
+	{citrus_t_piece_data, 4, 3, 3, 0},
+	{citrus_z_piece_data, 4, 3, 3, 0},
 };
