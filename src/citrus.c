@@ -18,8 +18,7 @@
  */
 
 #include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stddef.h>
 #include "citrus.h"
 
 void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*)) {
@@ -141,7 +140,11 @@ void CitrusGame_lock_piece(CitrusGame* game) {
 			}
 		}
 		if (full) {
-			memmove(game->board + y * game->config.width, game->board + (y + 1) * game->config.width, sizeof(CitrusCell) * game->config.width * (game->config.full_height - y - 1));
+			//memmove(game->board + y * game->config.width, game->board + (y + 1) * game->config.width, sizeof(CitrusCell) * game->config.width * (game->config.full_height - y - 1));
+			int n_cells = game->config.width * (game->config.full_height - y - 1);
+			for (int i = 0; i < n_cells; i++) {
+				game->board[i + y * game->config.width] = game->board[i + (y + 1) * game->config.width];
+			}
 			for (int x = 0; x < game->config.width; x++) {
 				game->board[(game->config.full_height - 1) * game->config.width + x].type = CITRUS_CELL_EMPTY;
 			}
@@ -245,18 +248,23 @@ bool CitrusGame_is_alive(CitrusGame* game) {
 }
 
 void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed) {
-	memset(bag, 0, sizeof(*bag));
+	bag->count = 0;
+	for (int i = 0; i < 7; i++) {
+		bag->chosen_pieces[i] = 0;
+	}
 	bag->state = seed;
 }
 
 const CitrusPiece* CitrusBagRandomizer_randomizer(void* data) {
 	CitrusBagRandomizer* bag = data;
 	if (bag->count == 7) {
-		memset(bag->chosen_pieces, 0, sizeof(bag->chosen_pieces));
+		for (int i = 0; i < 7; i++) {
+			bag->chosen_pieces[i] = 0;
+		}
 		bag->count = 0;
 	}
-	srand(bag->state);
-	bag->state = rand();
+	bag->state *= 6364136223846793005ULL;
+	bag->state++;
 	while (bag->chosen_pieces[bag->state % 7] != 0) {
 		bag->state++;
 	}

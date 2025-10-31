@@ -118,7 +118,7 @@ typedef struct {
 } CitrusServerLobby;
 
 typedef struct {
-	int state;
+	uint64_t state;
 	int chosen_pieces[7];
 	int count;
 } CitrusBagRandomizer;
