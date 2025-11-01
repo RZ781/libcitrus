@@ -2,8 +2,13 @@
 A C library for implementing modern multiplayer stacker games. To see
 libcitrus in use, check out [txtris](https://github.com/RZ781/txtris).
 
-The library currently has an unstable API and ABI - it is not yet ready
-for production use.
+The library's source code does not depend on libc, so it can be used
+practically anywhere, such as your favourite operating system or an
+embedded system. This also means no memory is allocated by the library
+so you can easily use any method for allocation you prefer, like arenas
+or C++ smart pointers. The current build script only targets Unix-like
+systems so you may need to modify it for other uses.  Currently, there
+is not a stable API or ABI - it is not yet ready for production use.
 
 libcitrus is free software, distributed under the terms of the GNU
 Lesser General Public License as published by the Free Software

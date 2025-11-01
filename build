@@ -17,10 +17,21 @@
 # License along with this program.  If not, see
 # <https://www.gnu.org/licenses/>.
 
+# build static and dynamic libraries
 gcc -Wall -Wextra -Wpedantic -Iinclude -c -fPIC src/* || exit $?
 ar rcs libcitrus.a *.o || exit $?
-gcc -shared *.o -o libcitrus.so || exit $?
+gcc -shared -nostdlib *.o -o libcitrus.so || exit $?
 rm *.o || exit $?
+
+# verify no symbols from libc are used
+undefined_symbols="$(nm -u libcitrus.so | grep -v __stack_chk)"
+if [ -n "$undefined_symbols" ] ; then
+	echo "undefined symbols:"
+	echo "$undefined_symbols"
+	exit 1
+fi
+
+# run tests
 for test in tests/* ; do
 	gcc -Wall -Wextra -Wpedantic -Iinclude -g -Wl,-rpath='${ORIGIN}' -L. -lcitrus "$test" -o test || exit $?
 	./test || exit $?
