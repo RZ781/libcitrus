@@ -22,10 +22,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "citrus.h"
+#include "tests.h"
 
 CitrusGame game;
 CitrusGameConfig config;
-CitrusCell board[10 * 40];
 
 void assert_position(int piece_x, int piece_y) {
 	for (int y = 0; y < 40; y++) {
@@ -40,14 +40,10 @@ void assert_position(int piece_x, int piece_y) {
 	}
 }
 
-const CitrusPiece* randomizer(void* data) {
-	(void) data;
-	return citrus_pieces + CITRUS_COLOR_O;
-}
-
-int main() {
-	CitrusGameConfig_init(&config, randomizer);
-	CitrusGame_init(&game, board, config, NULL);
+void movement_test() {
+	clear_board();
+	CitrusGameConfig_init(&config, single_piece_randomizer);
+	CitrusGame_init(&game, board, config, citrus_pieces + CITRUS_COLOR_O);
 	int x = 4;
 	for (int i = 0; i < 4; i++) {
 		CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
@@ -63,5 +59,4 @@ int main() {
 	}
 	CitrusGame_key_down(&game, CITRUS_KEY_RIGHT);
 	assert_position(x, 21);
-	return 0;
 }

@@ -17,50 +17,23 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "citrus.h"
-
-CitrusCell board[10 * 40];
-CitrusCell expected_board[10 * 40];
-
-void assert_expected(void) {
-	for (int y = 0; y < 40; y++) {
-		for (int x = 0; x < 10; x++) {
-			CitrusCell cell = board[y * 10 + x];
-			CitrusCell expected_cell = expected_board[y * 10 + x];
-			if (cell.type != expected_cell.type) {
-				fprintf(stderr, "assert_expected(): expected cell type %i at (%i, %i), got %i\n", expected_cell.type, x, y, cell.type);
-				abort();
-			}
-		}
-	}
-}
+#include "tests.h"
 
 void add_piece(int x, int y, CitrusCellType type) {
-	CitrusCell cell;
-	cell.type = type;
-	cell.color = CITRUS_COLOR_O;
-	expected_board[y * 10 + x] = cell;
-	expected_board[y * 10 + (x + 1)] = cell;
-	expected_board[(y + 1) * 10 + x] = cell;
-	expected_board[(y + 1) * 10 + (x + 1)] = cell;
+	set_piece(x, y, type, CITRUS_COLOR_O);
+	set_piece(x+1, y, type, CITRUS_COLOR_O);
+	set_piece(x, y+1, type, CITRUS_COLOR_O);
+	set_piece(x+1, y+1, type, CITRUS_COLOR_O);
 }
 
-const CitrusPiece* randomizer(void* data) {
-	(void) data;
-	return citrus_pieces + CITRUS_COLOR_O;
-}
-
-int main() {
+void hard_drop_test() {
 	CitrusGame game;
 	CitrusGameConfig config;
-	CitrusGameConfig_init(&config, randomizer);
-	CitrusGame_init(&game, board, config, NULL);
-	for (int i = 0; i < config.width * config.full_height; i++) {
-		expected_board[i].type = CITRUS_CELL_EMPTY;
-	}
+	CitrusGameConfig_init(&config, single_piece_randomizer);
+	CitrusGame_init(&game, board, config, citrus_pieces + CITRUS_COLOR_O);
+
+	clear_board();
 	add_piece(4, 21, CITRUS_CELL_FULL);
 	add_piece(4, 0, CITRUS_CELL_SHADOW);
 	assert_expected();
@@ -77,5 +50,4 @@ int main() {
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
 	add_piece(2, 0, CITRUS_CELL_FULL);
 	assert_expected();
-	return 0;
 }

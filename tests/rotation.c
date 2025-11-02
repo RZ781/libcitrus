@@ -22,92 +22,60 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "citrus.h"
+#include "tests.h"
 
-CitrusCell board[10 * 40];
-CitrusCell expected_board[10 * 40];
-
-void assert_expected(void) {
-	for (int y = 0; y < 40; y++) {
-		for (int x = 0; x < 10; x++) {
-			bool cell = board[y * 10 + x].type == CITRUS_CELL_FULL;
-			bool expected = expected_board[y * 10 + x].type == CITRUS_CELL_FULL;
-			if (cell != expected) {
-				fprintf(stderr, "assert_expected(): expected %s cell at (%i, %i), got %s cell\n", expected ? "full" : "empty", x, y, cell ? "full" : "empty");
-				abort();
-			}
-		}
-	}
-}
-
-void clear_board(void) {
-	for (int i=0; i<40*10; i++)
-		expected_board[i].type = CITRUS_CELL_EMPTY;
-}
-void add_piece(int x, int y) {
-	expected_board[y * 10 + x].type = CITRUS_CELL_FULL;
-	expected_board[y * 10 + x].color = CITRUS_COLOR_T;
-}
-
-void remove_piece(int x, int y) {
-	expected_board[y * 10 + x].type = CITRUS_CELL_EMPTY;
-}
-
-const CitrusPiece* randomizer(void* data) {
-	(void) data;
-	return citrus_pieces + CITRUS_COLOR_T;
-}
-
-int main() {
+void rotation_test() {
+	clear_board();
 	CitrusGame game;
 	CitrusGameConfig config;
-	CitrusGameConfig_init(&config, randomizer);
-	CitrusGame_init(&game, board, config, NULL);
+	CitrusGameConfig_init(&config, single_piece_randomizer);
+	CitrusGame_init(&game, board, config, citrus_pieces + CITRUS_COLOR_T);
 
 	clear_board();
-	add_piece(3, 21);
-	add_piece(4, 21);
-	add_piece(5, 21);
-	add_piece(4, 22);
+	set_piece(3, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(4, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(5, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(4, 22, CITRUS_CELL_FULL, CITRUS_COLOR_T);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_CLOCKWISE);
-	add_piece(4, 20);
-	remove_piece(3, 21);
+	set_piece(4, 20, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(3, 21, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_CLOCKWISE);
-	add_piece(3, 21);
-	remove_piece(4, 22);
+	set_piece(3, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(4, 22, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_CLOCKWISE);
-	add_piece(4, 22);
-	remove_piece(5, 21);
+	set_piece(4, 22, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(5, 21, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_CLOCKWISE);
-	add_piece(5, 21);
-	remove_piece(4, 20);
+	set_piece(5, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(4, 20, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_ANTICLOCKWISE);
-	add_piece(4, 20);
-	remove_piece(5, 21);
+	set_piece(4, 20, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(5, 21, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_ANTICLOCKWISE);
-	add_piece(5, 21);
-	remove_piece(4, 22);
+	set_piece(5, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(4, 22, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_ANTICLOCKWISE);
-	add_piece(4, 22);
-	remove_piece(3, 21);
+	set_piece(4, 22, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(3, 21, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_ANTICLOCKWISE);
-	add_piece(3, 21);
-	remove_piece(4, 20);
+	set_piece(3, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(4, 20, CITRUS_CELL_EMPTY, 0);
 	assert_expected();
 
 	CitrusGame_key_down(&game, CITRUS_KEY_CLOCKWISE);
@@ -117,11 +85,9 @@ int main() {
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
 	CitrusGame_key_down(&game, CITRUS_KEY_ANTICLOCKWISE);
 	clear_board();
-	add_piece(0, 21);
-	add_piece(0, 22);
-	add_piece(0, 20);
-	add_piece(1, 21);
+	set_piece(0, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(0, 22, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(0, 20, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(1, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
 	assert_expected();
-
-	return 0;
 }
