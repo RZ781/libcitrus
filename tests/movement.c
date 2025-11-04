@@ -43,7 +43,7 @@ void assert_position(int piece_x, int piece_y) {
 void movement_test() {
 	clear_board();
 	CitrusGameConfig_init(&config, single_piece_randomizer);
-	CitrusGame_init(&game, board, config, citrus_pieces + CITRUS_COLOR_O);
+	CitrusGame_init(&game, board, next_piece_queue, config, citrus_pieces + CITRUS_COLOR_O);
 	int x = 4;
 	for (int i = 0; i < 4; i++) {
 		CitrusGame_key_down(&game, CITRUS_KEY_LEFT);

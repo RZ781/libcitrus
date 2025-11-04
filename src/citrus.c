@@ -25,6 +25,7 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
 	config->width = 10;
 	config->height = 20;
 	config->full_height = 40;
+	config->next_piece_queue_size = 3;
 	config->gravity = 1.0 / 60.0;
 	config->max_move_reset = 15;
 	config->lock_delay = 30;
@@ -96,16 +97,20 @@ void CitrusGame_reset_piece(CitrusGame* game) {
 	game->lowest_y = game->current_y;
 }
 
-void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data) {
+void CitrusGame_init(CitrusGame* game, CitrusCell* board, const CitrusPiece** next_piece_queue, CitrusGameConfig config, void* randomizer_data) {
 	game->config = config;
 	game->randomizer_data = randomizer_data;
 	game->board = board;
+	game->next_piece_queue = next_piece_queue;
 	game->current_piece = config.randomizer(randomizer_data);
 	game->hold_piece = NULL;
 	game->alive = true;
 	CitrusGame_reset_piece(game);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
+	}
+	for (int i = 0; i < config.next_piece_queue_size; i++) {
+		next_piece_queue[i] = config.randomizer(randomizer_data);
 	}
 	CitrusGame_draw_piece(game, false);
 }
@@ -128,8 +133,17 @@ bool CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 	return !collided;
 }
 
+const CitrusPiece* CitrusGame_next_piece(CitrusGame* game) {
+	const CitrusPiece* piece = game->next_piece_queue[0];
+	for (int i = 0; i < game->config.next_piece_queue_size - 1; i++) {
+		game->next_piece_queue[i] = game->next_piece_queue[i + 1];
+	}
+	game->next_piece_queue[game->config.next_piece_queue_size - 1] = game->config.randomizer(game->randomizer_data);
+	return piece;
+}
+
 void CitrusGame_lock_piece(CitrusGame* game) {
-	game->current_piece = game->config.randomizer(game->randomizer_data);
+	game->current_piece = CitrusGame_next_piece(game);
 	CitrusGame_reset_piece(game);
 	for (int y = 0; y < game->config.full_height; y++) {
 		int full = 1;
@@ -204,7 +218,7 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key) {
 			const CitrusPiece* piece = game->hold_piece;
 			game->hold_piece = game->current_piece;
 			if (piece == NULL) {
-				game->current_piece = game->config.randomizer(game->randomizer_data);
+				game->current_piece = CitrusGame_next_piece(game);
 			} else {
 				game->current_piece = piece;
 			}
@@ -241,6 +255,10 @@ void CitrusGame_tick(CitrusGame* game) {
 
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y) {
 	return game->board[y * game->config.width + x];
+}
+
+const CitrusPiece* CitrusGame_get_next_piece(CitrusGame* game, int i) {
+	return game->next_piece_queue[i];
 }
 
 bool CitrusGame_is_alive(CitrusGame* game) {

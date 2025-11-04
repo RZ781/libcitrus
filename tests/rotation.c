@@ -29,7 +29,7 @@ void rotation_test() {
 	CitrusGame game;
 	CitrusGameConfig config;
 	CitrusGameConfig_init(&config, single_piece_randomizer);
-	CitrusGame_init(&game, board, config, citrus_pieces + CITRUS_COLOR_T);
+	CitrusGame_init(&game, board, next_piece_queue, config, citrus_pieces + CITRUS_COLOR_T);
 
 	clear_board();
 	set_piece(3, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);

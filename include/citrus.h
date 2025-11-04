@@ -68,6 +68,7 @@ typedef struct {
 	int width;
 	int height;
 	int full_height;
+	int next_piece_queue_size;
 	double gravity;
 	int lock_delay;
 	int max_move_reset;
@@ -80,6 +81,7 @@ typedef struct {
 	void* randomizer_data;
 	const CitrusPiece* current_piece;
 	const CitrusPiece* hold_piece;
+	const CitrusPiece** next_piece_queue;
 	bool held;
 	int current_x;
 	int current_y;
@@ -153,7 +155,7 @@ void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_ro
  * @param config Configuration options
  * @param randomizer_data Private internal state for randomizer function passed in config.randomizer
  */
-void CitrusGame_init(CitrusGame* game, CitrusCell* board, CitrusGameConfig config, void* randomizer_data);
+void CitrusGame_init(CitrusGame* game, CitrusCell* board, const CitrusPiece** next_piece_queue, CitrusGameConfig config, void* randomizer_data);
 
 /**
  * @brief Indicates a key has been pressed.
@@ -191,6 +193,15 @@ bool CitrusGame_is_alive(CitrusGame* game);
  * @return Cell at the specified location
  */
 CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
+
+/**
+ * @brief Gets a piece in the next piece queue
+ *
+ * @param game Game to get piece from
+ * @param i Zero-indexed position in the queue
+ * @return Piece at the specified position
+ */
+const CitrusPiece* CitrusGame_get_next_piece(CitrusGame* game, int i);
 
 /**
  * @brief Initializes a CitrusBagRandomizer struct

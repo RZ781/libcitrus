@@ -23,6 +23,7 @@
 
 CitrusCell board[10 * 40];
 CitrusCell expected_board[10 * 40];
+const CitrusPiece* next_piece_queue[3];
 
 void assert_expected(void) {
 	for (int y = 0; y < 40; y++) {
