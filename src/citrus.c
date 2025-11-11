@@ -134,6 +134,9 @@ bool CitrusGame_move_piece(CitrusGame* game, int dx, int dy) {
 }
 
 const CitrusPiece* CitrusGame_next_piece(CitrusGame* game) {
+	if (game->config.next_piece_queue_size == 0) {
+		return game->config.randomizer(game->randomizer_data);
+	}
 	const CitrusPiece* piece = game->next_piece_queue[0];
 	for (int i = 0; i < game->config.next_piece_queue_size - 1; i++) {
 		game->next_piece_queue[i] = game->next_piece_queue[i + 1];
