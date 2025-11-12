@@ -27,23 +27,33 @@
 CitrusGame game;
 CitrusGameConfig config;
 
-void assert_position(int piece_x, int piece_y) {
+void assert_position(int piece_x, int piece_y)
+{
 	for (int y = 0; y < 40; y++) {
 		for (int x = 0; x < 10; x++) {
-			bool cell = CitrusGame_get_cell(&game, x, y).type == CITRUS_CELL_FULL;
-			bool expected = x >= piece_x && y >= piece_y && x <= piece_x + 1 && y <= piece_y + 1;
+			bool cell =
+			    CitrusGame_get_cell(&game, x,
+						y).type == CITRUS_CELL_FULL;
+			bool expected = x >= piece_x && y >= piece_y
+			    && x <= piece_x + 1 && y <= piece_y + 1;
 			if (cell != expected) {
-				fprintf(stderr, "assert_position(%i, %i): expected %s cell at (%i, %i), got %s cell\n", piece_x, piece_y, expected ? "full" : "empty", x, y, cell ? "full" : "empty");
+				fprintf(stderr,
+					"assert_position(%i, %i): expected %s cell at (%i, %i), got %s cell\n",
+					piece_x, piece_y,
+					expected ? "full" : "empty", x, y,
+					cell ? "full" : "empty");
 				exit(-1);
 			}
 		}
 	}
 }
 
-void movement_test() {
+void movement_test()
+{
 	clear_board();
 	CitrusGameConfig_init(&config, single_piece_randomizer);
-	CitrusGame_init(&game, board, next_piece_queue, config, citrus_pieces + CITRUS_COLOR_O);
+	CitrusGame_init(&game, board, next_piece_queue, config,
+			citrus_pieces + CITRUS_COLOR_O);
 	int x = 4;
 	for (int i = 0; i < 4; i++) {
 		CitrusGame_key_down(&game, CITRUS_KEY_LEFT);

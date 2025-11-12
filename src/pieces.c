@@ -19,14 +19,14 @@
 
 #include "citrus.h"
 
-static const CitrusCell _ = {.type = CITRUS_CELL_EMPTY};
-static const CitrusCell T = {.color = CITRUS_COLOR_T, .type = CITRUS_CELL_FULL};
-static const CitrusCell S = {.color = CITRUS_COLOR_S, .type = CITRUS_CELL_FULL};
-static const CitrusCell Z = {.color = CITRUS_COLOR_Z, .type = CITRUS_CELL_FULL};
-static const CitrusCell J = {.color = CITRUS_COLOR_J, .type = CITRUS_CELL_FULL};
-static const CitrusCell L = {.color = CITRUS_COLOR_L, .type = CITRUS_CELL_FULL};
-static const CitrusCell I = {.color = CITRUS_COLOR_I, .type = CITRUS_CELL_FULL};
-static const CitrusCell O = {.color = CITRUS_COLOR_O, .type = CITRUS_CELL_FULL};
+static const CitrusCell _ = {.type = CITRUS_CELL_EMPTY };
+static const CitrusCell T = {.color = CITRUS_COLOR_T,.type = CITRUS_CELL_FULL };
+static const CitrusCell S = {.color = CITRUS_COLOR_S,.type = CITRUS_CELL_FULL };
+static const CitrusCell Z = {.color = CITRUS_COLOR_Z,.type = CITRUS_CELL_FULL };
+static const CitrusCell J = {.color = CITRUS_COLOR_J,.type = CITRUS_CELL_FULL };
+static const CitrusCell L = {.color = CITRUS_COLOR_L,.type = CITRUS_CELL_FULL };
+static const CitrusCell I = {.color = CITRUS_COLOR_I,.type = CITRUS_CELL_FULL };
+static const CitrusCell O = {.color = CITRUS_COLOR_O,.type = CITRUS_CELL_FULL };
 
 // these appear upside down since the beginning of the array is the bottom of the piece
 
@@ -142,7 +142,7 @@ const CitrusCell citrus_i_piece_data[4 * 4 * 4] = {
 	_, I, _, _
 };
 
-const CitrusCell citrus_o_piece_data[1 * 2 * 2] = {O, O, O, O};
+const CitrusCell citrus_o_piece_data[1 * 2 * 2] = { O, O, O, O };
 
 const CitrusPiece citrus_pieces[7] = {
 	{citrus_i_piece_data, 4, 4, 4, -1},

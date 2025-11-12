@@ -57,7 +57,7 @@ typedef struct {
 } CitrusCell;
 
 typedef struct {
-	const CitrusCell* piece_data;
+	const CitrusCell *piece_data;
 	int n_rotation_states;
 	int width;
 	int height;
@@ -72,16 +72,16 @@ typedef struct {
 	double gravity;
 	int lock_delay;
 	int max_move_reset;
-	const CitrusPiece* (*randomizer)(void*);
+	const CitrusPiece *(*randomizer)(void *);
 } CitrusGameConfig;
 
 typedef struct {
 	CitrusGameConfig config;
-	CitrusCell* board;
-	void* randomizer_data;
-	const CitrusPiece* current_piece;
-	const CitrusPiece* hold_piece;
-	const CitrusPiece** next_piece_queue;
+	CitrusCell *board;
+	void *randomizer_data;
+	const CitrusPiece *current_piece;
+	const CitrusPiece *hold_piece;
+	const CitrusPiece **next_piece_queue;
 	bool held;
 	int current_x;
 	int current_y;
@@ -108,15 +108,15 @@ typedef struct {
 typedef struct {
 	CitrusLobby lobby;
 	CitrusParser parser;
-	void (*send)(void* send_data, int n, uint8_t* data);
-	void* send_data;
+	void (*send)(void *send_data, int n, uint8_t * data);
+	void *send_data;
 } CitrusClientLobby;
 
 typedef struct {
 	CitrusLobby lobby;
 	CitrusParser parsers[256];
-	void (*send)(void* send_data, int n, uint8_t* data, int id);
-	void* send_data;
+	void (*send)(void *send_data, int n, uint8_t * data, int id);
+	void *send_data;
 } CitrusServerLobby;
 
 typedef struct {
@@ -133,7 +133,8 @@ extern const CitrusPiece citrus_pieces[7];
  * @param config Struct to be initialized
  * @param randomizer Randomizer function that accepts a void pointer passed in CitrusGame_init
  */
-void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*randomizer)(void*));
+void CitrusGameConfig_init(CitrusGameConfig * config,
+			   const CitrusPiece * (*randomizer) (void *));
 
 /**
  * @brief Initializes a CitrusPiece struct.
@@ -145,7 +146,9 @@ void CitrusGameConfig_init(CitrusGameConfig* config, const CitrusPiece* (*random
  * @param height Height of the piece
  * @param spawn_y Y coordinate relative to board height for when the piece enters
  */
-void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_rotation_states, int width, int height, int spawn_y);
+void CitrusPiece_init(CitrusPiece * piece, const CitrusCell * piece_data,
+		      int n_rotation_states, int width, int height,
+		      int spawn_y);
 
 /**
  * @brief Initializes a CitrusGame struct.
@@ -155,7 +158,9 @@ void CitrusPiece_init(CitrusPiece* piece, const CitrusCell* piece_data, int n_ro
  * @param config Configuration options
  * @param randomizer_data Private internal state for randomizer function passed in config.randomizer
  */
-void CitrusGame_init(CitrusGame* game, CitrusCell* board, const CitrusPiece** next_piece_queue, CitrusGameConfig config, void* randomizer_data);
+void CitrusGame_init(CitrusGame * game, CitrusCell * board,
+		     const CitrusPiece ** next_piece_queue,
+		     CitrusGameConfig config, void *randomizer_data);
 
 /**
  * @brief Indicates a key has been pressed.
@@ -164,7 +169,7 @@ void CitrusGame_init(CitrusGame* game, CitrusCell* board, const CitrusPiece** ne
  * @param game Game where key was pressed
  * @param key Key that has been pressed
  */
-void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
+void CitrusGame_key_down(CitrusGame * game, CitrusKey key);
 
 /**
  * @brief Indicates a tick has passed.
@@ -172,7 +177,7 @@ void CitrusGame_key_down(CitrusGame* game, CitrusKey key);
  *
  * @param game Game to update
  */
-void CitrusGame_tick(CitrusGame* game);
+void CitrusGame_tick(CitrusGame * game);
 
 /**
  * @brief Returns whether or not the player is alive.
@@ -182,7 +187,7 @@ void CitrusGame_tick(CitrusGame* game);
  * @retval true The player is still alive
  * @retval false The player has died
  */
-bool CitrusGame_is_alive(CitrusGame* game);
+bool CitrusGame_is_alive(CitrusGame * game);
 
 /**
  * @brief Gets the cell at a location.
@@ -192,7 +197,7 @@ bool CitrusGame_is_alive(CitrusGame* game);
  * @param y Y coordinate of the cell
  * @return Cell at the specified location
  */
-CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
+CitrusCell CitrusGame_get_cell(CitrusGame * game, int x, int y);
 
 /**
  * @brief Gets a piece in the next piece queue
@@ -201,7 +206,7 @@ CitrusCell CitrusGame_get_cell(CitrusGame* game, int x, int y);
  * @param i Zero-indexed position in the queue
  * @return Piece at the specified position
  */
-const CitrusPiece* CitrusGame_get_next_piece(CitrusGame* game, int i);
+const CitrusPiece *CitrusGame_get_next_piece(CitrusGame * game, int i);
 
 /**
  * @brief Initializes a CitrusBagRandomizer struct
@@ -209,7 +214,7 @@ const CitrusPiece* CitrusGame_get_next_piece(CitrusGame* game, int i);
  * @param bag Struct to be initialized
  * @param seedd Seed for the random number generator
  */
-void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed);
+void CitrusBagRandomizer_init(CitrusBagRandomizer * bag, int seed);
 
 /**
  * @brief Returns the next piece in the bag.
@@ -217,13 +222,18 @@ void CitrusBagRandomizer_init(CitrusBagRandomizer* bag, int seed);
  *
  * @param data Pointer to CitrusBagRandomizer
  */
-const CitrusPiece* CitrusBagRandomizer_randomizer(void* data);
+const CitrusPiece *CitrusBagRandomizer_randomizer(void *data);
 
-void CitrusClientLobby_init(CitrusClientLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data), void* send_data);
-void CitrusClientLobby_recv(CitrusClientLobby* lobby, int n, uint8_t* data);
-void CitrusServerLobby_init(CitrusServerLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data, int id), void* send_data);
-void CitrusServerLobby_client_connect(CitrusServerLobby* lobby, int id);
-void CitrusServerLobby_client_disconnect(CitrusServerLobby* lobby, int id);
-void CitrusServerLobby_recv(CitrusServerLobby* lobby, int n, uint8_t* data, int id);
+void CitrusClientLobby_init(CitrusClientLobby * lobby,
+			    void (*send)(void *send_data, int n,
+					 uint8_t * data), void *send_data);
+void CitrusClientLobby_recv(CitrusClientLobby * lobby, int n, uint8_t * data);
+void CitrusServerLobby_init(CitrusServerLobby * lobby,
+			    void (*send)(void *send_data, int n, uint8_t * data,
+					 int id), void *send_data);
+void CitrusServerLobby_client_connect(CitrusServerLobby * lobby, int id);
+void CitrusServerLobby_client_disconnect(CitrusServerLobby * lobby, int id);
+void CitrusServerLobby_recv(CitrusServerLobby * lobby, int n, uint8_t * data,
+			    int id);
 
 #endif

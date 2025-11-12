@@ -17,7 +17,20 @@
 # License along with this program.  If not, see
 # <https://www.gnu.org/licenses/>.
 
-gcc -Wall -Wextra -Wpedantic -Iinclude -c -fPIC src/* || exit $?
-ar rcs libcitrus.a *.o || exit $?
-gcc -shared -nostdlib *.o -o libcitrus.so || exit $?
-rm *.o || exit $?
+# fornat code
+VERSION_CONTROL=none indent -linux src/* include/* tests/*
+
+./build
+
+# verify no symbols from libc are used
+undefined_symbols="$(nm -u libcitrus.so | grep -v __stack_chk)"
+if [ -n "$undefined_symbols" ] ; then
+	echo "undefined symbols:"
+	echo "$undefined_symbols"
+	exit 1
+fi
+
+# run tests
+gcc -Wall -Wextra -Wpedantic -Iinclude -Itests -g -Wl,-rpath='${ORIGIN}' -L. -lcitrus tests/* -o test || exit $?
+./test || exit $?
+rm test

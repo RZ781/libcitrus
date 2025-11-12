@@ -31,12 +31,14 @@ typedef struct {
 	int data;
 } CitrusEvent;
 
-void CitrusParser_init(CitrusParser* parser) {
+void CitrusParser_init(CitrusParser *parser)
+{
 	parser->read_pointer = 0;
 	parser->write_pointer = 0;
 }
 
-bool CitrusParser_send(CitrusParser* parser, int n, uint8_t* data) {
+bool CitrusParser_send(CitrusParser *parser, int n, uint8_t *data)
+{
 	for (int i = 0; i < n; i++) {
 		parser->buffer[parser->write_pointer++] = data[i];
 		parser->write_pointer %= CITRUS_PARSER_BUFFER_SIZE;
@@ -47,7 +49,8 @@ bool CitrusParser_send(CitrusParser* parser, int n, uint8_t* data) {
 	return true;
 }
 
-bool CitrusParser_get_event(CitrusParser* parser, CitrusEvent* event) {
+bool CitrusParser_get_event(CitrusParser *parser, CitrusEvent *event)
+{
 	int length = parser->write_pointer - parser->read_pointer;
 	if (length < 0) {
 		length += CITRUS_PARSER_BUFFER_SIZE;
@@ -66,28 +69,34 @@ bool CitrusParser_get_event(CitrusParser* parser, CitrusEvent* event) {
 	return true;
 }
 
-void CitrusLobby_init(CitrusLobby* lobby) {
+void CitrusLobby_init(CitrusLobby *lobby)
+{
 	for (int i = 0; i < 256; i++) {
 		lobby->in_game_clients[i] = false;
 		lobby->connected_clients[i] = false;
 	}
 }
 
-void CitrusLobby_event(CitrusLobby* lobby, CitrusEvent event) {
+void CitrusLobby_event(CitrusLobby *lobby, CitrusEvent event)
+{
 	switch (event.type) {
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
-void CitrusClientLobby_init(CitrusClientLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data), void* send_data) {
+void CitrusClientLobby_init(CitrusClientLobby *lobby,
+			    void (*send)(void *send_data, int n, uint8_t *data),
+			    void *send_data)
+{
 	CitrusParser_init(&lobby->parser);
 	CitrusLobby_init(&lobby->lobby);
 	lobby->send = send;
 	lobby->send_data = send_data;
 }
 
-void CitrusClientLobby_recv(CitrusClientLobby* lobby, int n, uint8_t* data) {
+void CitrusClientLobby_recv(CitrusClientLobby *lobby, int n, uint8_t *data)
+{
 	CitrusParser_send(&lobby->parser, n, data);
 	CitrusEvent event;
 	while (CitrusParser_get_event(&lobby->parser, &event)) {
@@ -95,27 +104,34 @@ void CitrusClientLobby_recv(CitrusClientLobby* lobby, int n, uint8_t* data) {
 	}
 }
 
-void CitrusServerLobby_init(CitrusServerLobby* lobby, void (*send)(void* send_data, int n, uint8_t* data, int id), void* send_data) {
+void CitrusServerLobby_init(CitrusServerLobby *lobby,
+			    void (*send)(void *send_data, int n, uint8_t *data,
+					 int id), void *send_data)
+{
 	CitrusLobby_init(&lobby->lobby);
 	lobby->send = send;
 	lobby->send_data = send_data;
 }
 
-void CitrusServerLobby_client_connect(CitrusServerLobby* lobby, int id) {
+void CitrusServerLobby_client_connect(CitrusServerLobby *lobby, int id)
+{
 	CitrusEvent event;
 	event.type = CITRUS_EVENT_CONNECT;
 	event.client_id = id;
 	CitrusLobby_event(&lobby->lobby, event);
 }
 
-void CitrusServerLobby_client_disconnect(CitrusServerLobby* lobby, int id) {
+void CitrusServerLobby_client_disconnect(CitrusServerLobby *lobby, int id)
+{
 	CitrusEvent event;
 	event.type = CITRUS_EVENT_DISCONNECT;
 	event.client_id = id;
 	CitrusLobby_event(&lobby->lobby, event);
 }
 
-void CitrusServerLobby_recv(CitrusServerLobby* lobby, int n, uint8_t* data, int id) {
+void CitrusServerLobby_recv(CitrusServerLobby *lobby, int n, uint8_t *data,
+			    int id)
+{
 	if (lobby->lobby.connected_clients[id]) {
 		CitrusParser_send(&lobby->parsers[id], n, data);
 		CitrusEvent event;

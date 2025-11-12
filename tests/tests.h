@@ -24,13 +24,13 @@
 
 extern CitrusCell board[10 * 40];
 extern CitrusCell expected_board[10 * 40];
-extern const CitrusPiece* next_piece_queue[3];
+extern const CitrusPiece *next_piece_queue[3];
 
 void clear_board(void);
 void set_piece(int x, int y, CitrusCellType type, CitrusColor color);
 void assert_expected(void);
 
-const CitrusPiece* single_piece_randomizer(void* data);
+const CitrusPiece *single_piece_randomizer(void *data);
 void hard_drop_test();
 void movement_test();
 void rotation_test();

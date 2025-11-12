@@ -2,6 +2,9 @@
 A C library for implementing modern multiplayer stacker games. To see
 libcitrus in use, check out [txtris](https://github.com/RZ781/txtris).
 
+To build libcitrus, simply run `./build`. If you are editing the source
+code, use `./check` to format your code and run tests.
+
 The library's source code does not depend on libc, so it can be used
 practically anywhere, such as your favourite operating system or an
 embedded system. This also means no memory is allocated by the library

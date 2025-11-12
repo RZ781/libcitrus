@@ -20,18 +20,21 @@
 #include "citrus.h"
 #include "tests.h"
 
-void add_piece(int x, int y, CitrusCellType type) {
+void add_piece(int x, int y, CitrusCellType type)
+{
 	set_piece(x, y, type, CITRUS_COLOR_O);
-	set_piece(x+1, y, type, CITRUS_COLOR_O);
-	set_piece(x, y+1, type, CITRUS_COLOR_O);
-	set_piece(x+1, y+1, type, CITRUS_COLOR_O);
+	set_piece(x + 1, y, type, CITRUS_COLOR_O);
+	set_piece(x, y + 1, type, CITRUS_COLOR_O);
+	set_piece(x + 1, y + 1, type, CITRUS_COLOR_O);
 }
 
-void hard_drop_test() {
+void hard_drop_test()
+{
 	CitrusGame game;
 	CitrusGameConfig config;
 	CitrusGameConfig_init(&config, single_piece_randomizer);
-	CitrusGame_init(&game, board, next_piece_queue, config, citrus_pieces + CITRUS_COLOR_O);
+	CitrusGame_init(&game, board, next_piece_queue, config,
+			citrus_pieces + CITRUS_COLOR_O);
 
 	clear_board();
 	add_piece(4, 21, CITRUS_CELL_FULL);
