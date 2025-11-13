@@ -33,8 +33,8 @@ void assert_expected(void)
 			bool expected =
 			    expected_board[y * 10 + x].type == CITRUS_CELL_FULL;
 			if (cell != expected) {
-				fprintf(stderr,
-					"assert_expected(): expected %s cell at (%i, %i), got %s cell\n",
+				fprintf(stderr, "assert_expected(): "
+					"expected %s cell at (%i, %i), got %s cell\n",
 					expected ? "full" : "empty", x, y,
 					cell ? "full" : "empty");
 				abort();
@@ -45,8 +45,9 @@ void assert_expected(void)
 
 void clear_board(void)
 {
-	for (int i = 0; i < 40 * 10; i++)
+	for (int i = 0; i < 40 * 10; i++) {
 		expected_board[i].type = CITRUS_CELL_EMPTY;
+	}
 }
 
 void set_piece(int x, int y, CitrusCellType type, CitrusColor color)
@@ -55,9 +56,13 @@ void set_piece(int x, int y, CitrusCellType type, CitrusColor color)
 	expected_board[y * 10 + x].color = color;
 }
 
-const CitrusPiece *single_piece_randomizer(void *data)
+const CitrusPiece *loop_randomizer(void *data)
 {
-	return data;
+	LoopRandomizer *loop = data;
+	const CitrusPiece *piece = loop->pieces[loop->position];
+	loop->position++;
+	loop->position %= loop->length;
+	return piece;
 }
 
 int main()

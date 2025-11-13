@@ -51,18 +51,18 @@ bool CitrusGame_collided(CitrusGame *game)
 	int rotation = game->current_rotation;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			if (game->current_piece->
-			    piece_data[rotation * width * height + y * width +
-				       x].type != CITRUS_CELL_FULL)
+			if (game->current_piece->piece_data[rotation * width *
+							    height + y * width +
+							    x].type !=
+			    CITRUS_CELL_FULL)
 				continue;
 			if (x + game->current_x < 0 || y + game->current_y < 0
 			    || x + game->current_x >= game->config.width
 			    || y + game->current_y >= game->config.full_height
 			    || game->board[(y + game->current_y) *
-					   game->config.width + (x +
-								 game->
-								 current_x)].
-			    type == CITRUS_CELL_FULL) {
+					   game->config.width + x +
+					   game->current_x].type
+			    == CITRUS_CELL_FULL) {
 				return true;
 			}
 		}
