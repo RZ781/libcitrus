@@ -224,16 +224,4 @@ void CitrusBagRandomizer_init(CitrusBagRandomizer * bag, int seed);
  */
 const CitrusPiece *CitrusBagRandomizer_randomizer(void *data);
 
-void CitrusClientLobby_init(CitrusClientLobby * lobby,
-			    void (*send)(void *send_data, int n,
-					 uint8_t * data), void *send_data);
-void CitrusClientLobby_recv(CitrusClientLobby * lobby, int n, uint8_t * data);
-void CitrusServerLobby_init(CitrusServerLobby * lobby,
-			    void (*send)(void *send_data, int n, uint8_t * data,
-					 int id), void *send_data);
-void CitrusServerLobby_client_connect(CitrusServerLobby * lobby, int id);
-void CitrusServerLobby_client_disconnect(CitrusServerLobby * lobby, int id);
-void CitrusServerLobby_recv(CitrusServerLobby * lobby, int n, uint8_t * data,
-			    int id);
-
 #endif
