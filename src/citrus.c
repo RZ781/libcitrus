@@ -75,16 +75,21 @@ void CitrusGame_draw_piece_inner(CitrusGame *game, CitrusCellType type)
 	int width = game->current_piece->width;
 	int height = game->current_piece->height;
 	int rotation = game->current_rotation;
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
+	for (int dy = 0; dy < height; dy++) {
+		for (int dx = 0; dx < width; dx++) {
 			CitrusCell cell =
 			    game->current_piece->piece_data[rotation * width *
-							    height + y * width +
-							    x];
+							    height +
+							    dy * width + dx];
 			if (cell.type != CITRUS_CELL_FULL)
 				continue;
-			game->board[(y + game->current_y) * game->config.width +
-				    (x + game->current_x)] = (CitrusCell) {
+			int x = game->current_x + dx;
+			int y = game->current_y + dy;
+			if (x < 0 || x >= game->config.width || y < 0
+			    || y >= game->config.full_height) {
+				continue;
+			}
+			game->board[y * game->config.width + x] = (CitrusCell) {
 			.type = type,.color = cell.color};
 		}
 	}
@@ -189,7 +194,6 @@ void CitrusGame_lock_piece(CitrusGame *game)
 			}
 		}
 		if (full) {
-			//memmove(game->board + y * game->config.width, game->board + (y + 1) * game->config.width, sizeof(CitrusCell) * game->config.width * (game->config.full_height - y - 1));
 			int n_cells =
 			    game->config.width * (game->config.full_height - y -
 						  1);
@@ -299,6 +303,11 @@ void CitrusGame_tick(CitrusGame *game)
 
 CitrusCell CitrusGame_get_cell(CitrusGame *game, int x, int y)
 {
+	if (x < 0 || x >= game->config.width || y < 0
+	    || y >= game->config.full_height) {
+		return (CitrusCell) {
+		.type = CITRUS_CELL_EMPTY};
+	}
 	return game->board[y * game->config.width + x];
 }
 
