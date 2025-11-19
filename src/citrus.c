@@ -257,6 +257,9 @@ void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 	case CITRUS_KEY_ANTICLOCKWISE:
 		moved = CitrusGame_rotate_piece(game, -1);
 		break;
+	case CITRUS_KEY_180:
+		moved = CitrusGame_rotate_piece(game, 2);
+		break;
 	case CITRUS_KEY_HOLD:
 		if (game->held) {
 			break;
