@@ -92,6 +92,7 @@ typedef struct {
 	int lock_delay;
 	int move_reset_count;
 	int lowest_y;
+	int score;
 } CitrusGame;
 
 typedef struct {

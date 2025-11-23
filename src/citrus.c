@@ -21,6 +21,10 @@
 #include <stddef.h>
 #include "citrus.h"
 
+const int CLEAR_SCORES[5] = {0, 100, 300, 500, 800};
+const int MINI_T_SPIN_SCORES[4] = {100, 200, 400, 800};
+const int T_SPIN_SCORES[4] = {400, 800, 1200, 1600};
+
 void CitrusGameConfig_init(CitrusGameConfig *config,
 			   const CitrusPiece *(*randomizer) (void *))
 {
@@ -137,6 +141,7 @@ void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 	game->current_piece = config.randomizer(randomizer_data);
 	game->hold_piece = NULL;
 	game->alive = true;
+	game->score = 0;
 	CitrusGame_reset_piece(game);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
@@ -184,6 +189,7 @@ void CitrusGame_lock_piece(CitrusGame *game)
 {
 	game->current_piece = CitrusGame_next_piece(game);
 	CitrusGame_reset_piece(game);
+	int cleared_lines = 0;
 	for (int y = 0; y < game->config.full_height; y++) {
 		int full = 1;
 		for (int x = 0; x < game->config.width; x++) {
@@ -194,6 +200,7 @@ void CitrusGame_lock_piece(CitrusGame *game)
 			}
 		}
 		if (full) {
+			cleared_lines++;
 			int n_cells =
 			    game->config.width * (game->config.full_height - y -
 						  1);
@@ -210,6 +217,10 @@ void CitrusGame_lock_piece(CitrusGame *game)
 			y--;
 		}
 	}
+	if (cleared_lines > 4) {
+		cleared_lines = 4;
+	}
+	game->score += CLEAR_SCORES[cleared_lines];
 	if (CitrusGame_collided(game)) {
 		game->alive = false;
 		return;
@@ -245,11 +256,13 @@ void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 		moved = CitrusGame_move_piece(game, 1, 0);
 		break;
 	case CITRUS_KEY_HARD_DROP:
-		while (CitrusGame_move_piece(game, 0, -1)) ;
+		while (CitrusGame_move_piece(game, 0, -1))
+			game->score += 2;
 		CitrusGame_lock_piece(game);
 		break;
 	case CITRUS_KEY_SOFT_DROP:
-		while (CitrusGame_move_piece(game, 0, -1)) ;
+		while (CitrusGame_move_piece(game, 0, -1))
+			game->score++;
 		break;
 	case CITRUS_KEY_CLOCKWISE:
 		moved = CitrusGame_rotate_piece(game, 1);
