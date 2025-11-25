@@ -21,9 +21,23 @@
 #include <stddef.h>
 #include "citrus.h"
 
-const int CLEAR_SCORES[5] = {0, 100, 300, 500, 800};
-const int MINI_T_SPIN_SCORES[4] = {100, 200, 400, 800};
-const int T_SPIN_SCORES[4] = {400, 800, 1200, 1600};
+const int CLEAR_SCORES[5] = { 0, 100, 300, 500, 800 };
+const int MINI_T_SPIN_SCORES[4] = { 100, 200, 400, 800 };
+const int T_SPIN_SCORES[4] = { 400, 800, 1200, 1600 };
+
+const int KICK_TABLE_X[4][5] = {
+	{0, -1, -1, 0, -1},
+	{0, 1, 1, 0, 1},
+	{0, 1, 1, 0, 1},
+	{0, -1, -1, 0, -1}
+};
+
+const int KICK_TABLE_Y[4][5] = {
+	{0, 0, 1, -2, -2},
+	{0, 0, -1, 2, 2},
+	{0, 0, 1, -2, -2},
+	{0, 0, -1, 2, 2}
+};
 
 void CitrusGameConfig_init(CitrusGameConfig *config,
 			   const CitrusPiece *(*randomizer) (void *))
@@ -230,14 +244,28 @@ void CitrusGame_lock_piece(CitrusGame *game)
 
 bool CitrusGame_rotate_piece(CitrusGame *game, int n)
 {
-	bool success = true;
 	CitrusGame_draw_piece(game, true);
 	int prev_rotation = game->current_rotation;
 	game->current_rotation += n + game->current_piece->n_rotation_states;
 	game->current_rotation %= game->current_piece->n_rotation_states;
-	if (CitrusGame_collided(game)) {
+	bool success = false;
+	int prev_x = game->current_x;
+	int prev_y = game->current_y;
+	bool clockwise = n > 0;
+	int row = clockwise ? prev_rotation : game->current_rotation;
+	int sign = clockwise ? 1 : -1;
+	for (int i = 0; i < 5; i++) {
+		game->current_x = prev_x + sign * KICK_TABLE_X[row][i];
+		game->current_y = prev_y + sign * KICK_TABLE_Y[row][i];
+		if (!CitrusGame_collided(game)) {
+			success = true;
+			break;
+		}
+	}
+	if (!success) {
 		game->current_rotation = prev_rotation;
-		success = false;
+		game->current_x = prev_x;
+		game->current_y = prev_y;
 	}
 	CitrusGame_draw_piece(game, false);
 	return success;

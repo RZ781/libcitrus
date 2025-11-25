@@ -90,9 +90,9 @@ void rotation_test()
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
 	CitrusGame_key_down(&game, CITRUS_KEY_ANTICLOCKWISE);
 	clear_board();
-	set_piece(0, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
-	set_piece(0, 22, CITRUS_CELL_FULL, CITRUS_COLOR_T);
-	set_piece(0, 20, CITRUS_CELL_FULL, CITRUS_COLOR_T);
 	set_piece(1, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(1, 22, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(0, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
+	set_piece(2, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);
 	assert_expected();
 }
