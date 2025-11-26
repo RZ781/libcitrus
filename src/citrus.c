@@ -39,6 +39,20 @@ const int KICK_TABLE_Y[4][5] = {
 	{0, 0, -1, 2, 2}
 };
 
+const int I_KICK_TABLE_X[4][5] = {
+	{0, -2, 1, -2, 1},
+	{0, -1, 2, -1, 2},
+	{0, 2, -1, 2, -1},
+	{0, 1, -2, 1, -2}
+};
+
+const int I_KICK_TABLE_Y[4][5] = {
+	{0, 0, 0, -1, 2},
+	{0, 0, 0, 2, -1},
+	{0, 0, 0, 1, -2},
+	{0, 0, 0, -2, 1}
+};
+
 void CitrusGameConfig_init(CitrusGameConfig *config,
 			   const CitrusPiece *(*randomizer) (void *))
 {
@@ -246,17 +260,21 @@ bool CitrusGame_rotate_piece(CitrusGame *game, int n)
 {
 	CitrusGame_draw_piece(game, true);
 	int prev_rotation = game->current_rotation;
+	int prev_x = game->current_x;
+	int prev_y = game->current_y;
 	game->current_rotation += n + game->current_piece->n_rotation_states;
 	game->current_rotation %= game->current_piece->n_rotation_states;
 	bool success = false;
-	int prev_x = game->current_x;
-	int prev_y = game->current_y;
-	bool clockwise = n > 0;
-	int row = clockwise ? prev_rotation : game->current_rotation;
-	int sign = clockwise ? 1 : -1;
+	int row = n > 0 ? prev_rotation : game->current_rotation;
+	int sign = n > 0 ? 1 : -1;
+	bool i_piece = game->current_piece == &citrus_pieces[CITRUS_COLOR_I];
+	const int *kick_table_x =
+	    i_piece ? I_KICK_TABLE_X[row] : KICK_TABLE_X[row];
+	const int *kick_table_y =
+	    i_piece ? I_KICK_TABLE_Y[row] : KICK_TABLE_Y[row];
 	for (int i = 0; i < 5; i++) {
-		game->current_x = prev_x + sign * KICK_TABLE_X[row][i];
-		game->current_y = prev_y + sign * KICK_TABLE_Y[row][i];
+		game->current_x = prev_x + sign * kick_table_x[i];
+		game->current_y = prev_y + sign * kick_table_y[i];
 		if (!CitrusGame_collided(game)) {
 			success = true;
 			break;
