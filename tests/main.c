@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include "tests.h"
 
+CitrusGameConfig test_config;
+
 CitrusCell board[10 * 40];
 CitrusCell expected_board[10 * 40];
 const CitrusPiece *next_piece_queue[3];
@@ -67,6 +69,8 @@ const CitrusPiece *loop_randomizer(void *data)
 
 int main()
 {
+	test_config = citrus_preset_modern;
+	test_config.randomizer = loop_randomizer;
 	hard_drop_test();
 	rotation_test();
 	movement_test();

@@ -128,15 +128,8 @@ typedef struct {
 } CitrusBagRandomizer;
 
 extern const CitrusPiece citrus_pieces[7];
-
-/**
- * @brief Initializes a CitrusGameConfig struct.
- *
- * @param config Struct to be initialized
- * @param randomizer Randomizer function that accepts a void pointer passed in CitrusGame_init
- */
-void CitrusGameConfig_init(CitrusGameConfig * config,
-			   const CitrusPiece * (*randomizer) (void *));
+extern const CitrusGameConfig citrus_preset_modern;
+extern const CitrusGameConfig citrus_preset_classic;
 
 /**
  * @brief Initializes a CitrusPiece struct.

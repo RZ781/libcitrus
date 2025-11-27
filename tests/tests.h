@@ -28,6 +28,7 @@ typedef struct {
 	const CitrusPiece **pieces;
 } LoopRandomizer;
 
+extern CitrusGameConfig test_config;
 extern CitrusCell board[10 * 40];
 extern CitrusCell expected_board[10 * 40];
 extern const CitrusPiece *next_piece_queue[3];

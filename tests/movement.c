@@ -25,7 +25,6 @@
 #include "tests.h"
 
 CitrusGame game;
-CitrusGameConfig config;
 
 void assert_position(int piece_x, int piece_y)
 {
@@ -51,11 +50,10 @@ void assert_position(int piece_x, int piece_y)
 void movement_test()
 {
 	clear_board();
-	CitrusGameConfig_init(&config, loop_randomizer);
 	LoopRandomizer randomizer_data = {.length = 1,.position = 0,.pieces =
 		    (const CitrusPiece *[]) {citrus_pieces + CITRUS_COLOR_O}
 	};
-	CitrusGame_init(&game, board, next_piece_queue, config,
+	CitrusGame_init(&game, board, next_piece_queue, test_config,
 			&randomizer_data);
 	int x = 4;
 	for (int i = 0; i < 4; i++) {

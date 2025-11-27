@@ -31,12 +31,10 @@ void add_piece(int x, int y, CitrusCellType type)
 void hard_drop_test()
 {
 	CitrusGame game;
-	CitrusGameConfig config;
-	CitrusGameConfig_init(&config, loop_randomizer);
 	LoopRandomizer randomizer_data = {.length = 1,.position = 0,.pieces =
 		    (const CitrusPiece *[]) {citrus_pieces + CITRUS_COLOR_O}
 	};
-	CitrusGame_init(&game, board, next_piece_queue, config,
+	CitrusGame_init(&game, board, next_piece_queue, test_config,
 			&randomizer_data);
 
 	clear_board();

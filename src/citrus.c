@@ -53,18 +53,27 @@ const int I_KICK_TABLE_Y[4][5] = {
 	{0, 0, 0, -2, 1}
 };
 
-void CitrusGameConfig_init(CitrusGameConfig *config,
-			   const CitrusPiece *(*randomizer) (void *))
-{
-	config->width = 10;
-	config->height = 20;
-	config->full_height = 40;
-	config->next_piece_queue_size = 3;
-	config->gravity = 1.0 / 60.0;
-	config->max_move_reset = 15;
-	config->lock_delay = 30;
-	config->randomizer = randomizer;
-}
+const CitrusGameConfig citrus_preset_modern = {
+	.width = 10,
+	.height = 20,
+	.full_height = 40,
+	.next_piece_queue_size = 3,
+	.gravity = 1.0 / 60.0,
+	.max_move_reset = 15,
+	.lock_delay = 30,
+	.randomizer = CitrusBagRandomizer_randomizer
+};
+
+const CitrusGameConfig citrus_preset_classic = {
+	.width = 10,
+	.height = 20,
+	.full_height = 40,
+	.next_piece_queue_size = 1,
+	.gravity = 1.0 / 48.0,
+	.max_move_reset = 0,
+	.lock_delay = 48,
+	.randomizer = CitrusBagRandomizer_randomizer
+};
 
 void CitrusPiece_init(CitrusPiece *piece, const CitrusCell *piece_data,
 		      int n_rotation_states, int width, int height, int spawn_y)

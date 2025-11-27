@@ -28,12 +28,10 @@ void rotation_test()
 {
 	clear_board();
 	CitrusGame game;
-	CitrusGameConfig config;
-	CitrusGameConfig_init(&config, loop_randomizer);
 	LoopRandomizer randomizer_data = {.length = 1,.position = 0,.pieces =
 		    (const CitrusPiece *[]) {citrus_pieces + CITRUS_COLOR_T}
 	};
-	CitrusGame_init(&game, board, next_piece_queue, config,
+	CitrusGame_init(&game, board, next_piece_queue, test_config,
 			&randomizer_data);
 
 	clear_board();
