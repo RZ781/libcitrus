@@ -74,6 +74,9 @@ typedef struct {
 	int lock_delay;
 	int max_move_reset;
 	const CitrusPiece *(*randomizer)(void *);
+	int clear_scores[5];
+	int t_spin_scores[4];
+	int mini_t_spin_scores[4];
 } CitrusGameConfig;
 
 typedef struct {

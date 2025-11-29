@@ -21,10 +21,6 @@
 #include <stddef.h>
 #include "citrus.h"
 
-const int CLEAR_SCORES[5] = { 0, 100, 300, 500, 800 };
-const int MINI_T_SPIN_SCORES[4] = { 100, 200, 400, 800 };
-const int T_SPIN_SCORES[4] = { 400, 800, 1200, 1600 };
-
 const int KICK_TABLE_X[4][5] = {
 	{0, -1, -1, 0, -1},
 	{0, 1, 1, 0, 1},
@@ -61,7 +57,10 @@ const CitrusGameConfig citrus_preset_modern = {
 	.gravity = 1.0 / 60.0,
 	.max_move_reset = 15,
 	.lock_delay = 30,
-	.randomizer = CitrusBagRandomizer_randomizer
+	.randomizer = CitrusBagRandomizer_randomizer,
+	.clear_scores = {0, 100, 300, 500, 800},
+	.mini_t_spin_scores = {100, 200, 400, 800},
+	.t_spin_scores = {400, 800, 1200, 1600}
 };
 
 const CitrusGameConfig citrus_preset_classic = {
@@ -72,7 +71,10 @@ const CitrusGameConfig citrus_preset_classic = {
 	.gravity = 1.0 / 48.0,
 	.max_move_reset = 0,
 	.lock_delay = 48,
-	.randomizer = CitrusBagRandomizer_randomizer
+	.randomizer = CitrusBagRandomizer_randomizer,
+	.clear_scores = {0, 40, 100, 300, 1200},
+	.t_spin_scores = {0, 40, 100, 300},
+	.mini_t_spin_scores = {0, 40, 100, 300},
 };
 
 void CitrusPiece_init(CitrusPiece *piece, const CitrusCell *piece_data,
@@ -257,7 +259,7 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	if (cleared_lines > 4) {
 		cleared_lines = 4;
 	}
-	game->score += CLEAR_SCORES[cleared_lines];
+	game->score += game->config.clear_scores[cleared_lines];
 	if (CitrusGame_collided(game)) {
 		game->alive = false;
 		return;
