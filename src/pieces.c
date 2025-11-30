@@ -144,6 +144,7 @@ const CitrusCell citrus_i_piece_data[4 * 4 * 4] = {
 
 const CitrusCell citrus_o_piece_data[1 * 2 * 2] = { O, O, O, O };
 
+// must be ordered same as CitrusColor members (alphabetical)
 const CitrusPiece citrus_pieces[7] = {
 	{citrus_i_piece_data, 4, 4, 4, -1},
 	{citrus_j_piece_data, 4, 3, 3, 0},
