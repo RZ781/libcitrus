@@ -436,14 +436,20 @@ const CitrusPiece *CitrusBagRandomizer_randomizer(void *data)
 		}
 		bag->count = 0;
 	}
+	uint32_t piece = Citrus_random(&bag->state);
+	while (bag->chosen_pieces[piece % 7] != 0) {
+		piece++;
+	}
+	bag->chosen_pieces[piece % 7] = 1;
+	bag->count++;
+	return citrus_pieces + (piece % 7);
+}
+
+// generate a random number betweem 0 and 2^32 - 1
+uint32_t Citrus_random(uint64_t * state) {
 	// algorithm taken from
 	// https://en.wikipedia.org/wiki/Linear_congruential_generator
-	bag->state *= 6364136223846793005ULL;
-	bag->state++;
-	while (bag->chosen_pieces[bag->state % 7] != 0) {
-		bag->state++;
-	}
-	bag->chosen_pieces[bag->state % 7] = 1;
-	bag->count++;
-	return citrus_pieces + (bag->state % 7);
+	*state *= 6364136223846793005ULL;
+	(*state) += 1;
+	return (*state) >> 32;
 }

@@ -137,11 +137,13 @@ extern const CitrusGameConfig citrus_preset_classic;
  * @brief Initializes a CitrusPiece struct.
  *
  * @param piece Struct to be initialized
- * @param piece_data Array of n_rotation_states*width*height cells representing the piece in each rotation state
+ * @param piece_data Array of n_rotation_states*width*height cells representing
+ * the piece in each rotation state
  * @param n_rotation_states Number of rotation states the piece has
  * @param width Width of the piece
  * @param height Height of the piece
- * @param spawn_y Y coordinate relative to board height for when the piece enters
+ * @param spawn_y Y coordinate relative to board height for when the piece
+ * enters
  */
 void CitrusPiece_init(CitrusPiece * piece, const CitrusCell * piece_data,
 		      int n_rotation_states, int width, int height,
@@ -151,9 +153,11 @@ void CitrusPiece_init(CitrusPiece * piece, const CitrusCell * piece_data,
  * @brief Initializes a CitrusGame struct.
  *
  * @param game Struct to be initialized
- * @param board Array of config.width*config.full_height cells that will be used to store the board
+ * @param board Array of config.width*config.full_height cells that will be used
+ * to store the board
  * @param config Configuration options
- * @param randomizer_data Private internal state for randomizer function passed in config.randomizer
+ * @param randomizer_data Private internal state for randomizer function passed
+ * in config.randomizer
  */
 void CitrusGame_init(CitrusGame * game, CitrusCell * board,
 		     const CitrusPiece ** next_piece_queue,
@@ -178,7 +182,8 @@ void CitrusGame_tick(CitrusGame * game);
 
 /**
  * @brief Returns whether or not the player is alive.
- * Functions including CitrusGame_key_down and CitrusGame_tick will not do anything if the player is dead.
+ * Functions including CitrusGame_key_down and CitrusGame_tick will not do
+ * anything if the player is dead.
  *
  * @param game Game to check
  * @retval true The player is still alive
@@ -197,7 +202,7 @@ bool CitrusGame_is_alive(CitrusGame * game);
 CitrusCell CitrusGame_get_cell(CitrusGame * game, int x, int y);
 
 /**
- * @brief Gets a piece in the next piece queue
+ * @brief Gets a piece in the next piece queue.
  *
  * @param game Game to get piece from
  * @param i Zero-indexed position in the queue
@@ -206,16 +211,24 @@ CitrusCell CitrusGame_get_cell(CitrusGame * game, int x, int y);
 const CitrusPiece *CitrusGame_get_next_piece(CitrusGame * game, int i);
 
 /**
- * @brief Initializes a CitrusBagRandomizer struct
+ * @brief Initializes a CitrusBagRandomizer struct.
  *
  * @param bag Struct to be initialized
- * @param seedd Seed for the random number generator
+ * @param seed Seed for the random number generator
  */
 void CitrusBagRandomizer_init(CitrusBagRandomizer * bag, int seed);
 
 /**
+ * @brief Generates a random number between 0 and 2^32 - 1 using an internal
+ * state.
+ *
+ * @param state Pointer to 64-bit internal state
+ */
+uint32_t Citrus_random(uint64_t * state);
+
+/**
  * @brief Returns the next piece in the bag.
- * This can be passed to CitrusGameConfig_init as the randomizer callback function.
+ * This can be passed to CitrusGameConfig_init as the randomizer callback function
  *
  * @param data Pointer to CitrusBagRandomizer
  */
