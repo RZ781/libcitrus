@@ -129,6 +129,11 @@ typedef struct {
 	int count;
 } CitrusBagRandomizer;
 
+typedef struct {
+	uint64_t state;
+	int previous_piece;
+} CitrusClassicRandomizer;
+
 extern const CitrusPiece citrus_pieces[7];
 extern const CitrusGameConfig citrus_preset_modern;
 extern const CitrusGameConfig citrus_preset_classic;
@@ -219,20 +224,36 @@ const CitrusPiece *CitrusGame_get_next_piece(CitrusGame * game, int i);
 void CitrusBagRandomizer_init(CitrusBagRandomizer * bag, int seed);
 
 /**
- * @brief Generates a random number between 0 and 2^32 - 1 using an internal
- * state.
- *
- * @param state Pointer to 64-bit internal state
- */
-uint32_t Citrus_random(uint64_t * state);
-
-/**
  * @brief Returns the next piece in the bag.
  * This can be passed to CitrusGameConfig_init as the randomizer callback function
  *
  * @param data Pointer to CitrusBagRandomizer
  */
 const CitrusPiece *CitrusBagRandomizer_randomizer(void *data);
+
+/**
+ * @brief Initializes a CitrusClassicRandomizer struct.
+ *
+ * @param randomizer Struct to be initialized
+ * @param seed Seed for the random number generator
+ */
+void CitrusClassicRandomizer_init(CitrusClassicRandomizer * randomizer, int seed);
+
+/**
+ * @brief Returns the next piece.
+ * This can be passed to CitrusGameConfig_init as the randomizer callback function
+ *
+ * @param data Pointer to CitrusClassicRandomizer
+ */
+const CitrusPiece *CitrusClassicRandomizer_randomizer(void *data);
+
+/**
+ * @brief Generates a random number between 0 and 2^32 - 1 using an internal
+ * state.
+ *
+ * @param state Pointer to 64-bit internal state
+ */
+uint32_t Citrus_random(uint64_t * state);
 
 void CitrusClientLobby_init(CitrusClientLobby * lobby,
 			    void (*send)(void *send_data, int n,

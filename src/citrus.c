@@ -430,6 +430,7 @@ void CitrusBagRandomizer_init(CitrusBagRandomizer *bag, int seed)
 const CitrusPiece *CitrusBagRandomizer_randomizer(void *data)
 {
 	CitrusBagRandomizer *bag = data;
+	// reset the bag once all seven pieces have been chosen
 	if (bag->count == 7) {
 		for (int i = 0; i < 7; i++) {
 			bag->chosen_pieces[i] = 0;
@@ -437,12 +438,30 @@ const CitrusPiece *CitrusBagRandomizer_randomizer(void *data)
 		bag->count = 0;
 	}
 	uint32_t piece = Citrus_random(&bag->state);
+	// find a piece that hasn't been chosen yet
 	while (bag->chosen_pieces[piece % 7] != 0) {
 		piece++;
 	}
 	bag->chosen_pieces[piece % 7] = 1;
 	bag->count++;
 	return citrus_pieces + (piece % 7);
+}
+
+// initialise a classic randomiser with a fixed seed
+void CitrusClassicRandomizer_init(CitrusClassicRandomizer * randomizer, int seed) {
+	randomizer->state = seed;
+	randomizer->previous_piece = -1;
+}
+
+// get next piece
+const CitrusPiece *CitrusClassicRandomizer_randomizer(void *data) {
+	CitrusClassicRandomizer* randomizer = data;
+	int piece = Citrus_random(&randomizer->state) % 8;
+	if (piece == 7 || piece == randomizer->previous_piece) {
+		piece = Citrus_random(&randomizer->state) % 7;
+	}
+	randomizer->previous_piece = piece;
+	return citrus_pieces + piece;
 }
 
 // generate a random number betweem 0 and 2^32 - 1
