@@ -76,6 +76,7 @@ typedef struct {
 	int clear_scores[5];
 	int t_spin_scores[4];
 	int mini_t_spin_scores[4];
+	int line_clear_delay;
 } CitrusGameConfig;
 
 typedef struct {
@@ -95,6 +96,7 @@ typedef struct {
 	int move_reset_count;
 	int lowest_y;
 	int score;
+	int line_clear_delay;
 } CitrusGame;
 
 typedef struct {
@@ -237,7 +239,8 @@ const CitrusPiece *CitrusBagRandomizer_randomizer(void *data);
  * @param randomizer Struct to be initialized
  * @param seed Seed for the random number generator
  */
-void CitrusClassicRandomizer_init(CitrusClassicRandomizer * randomizer, int seed);
+void CitrusClassicRandomizer_init(CitrusClassicRandomizer * randomizer,
+				  int seed);
 
 /**
  * @brief Returns the next piece.

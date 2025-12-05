@@ -64,7 +64,8 @@ const CitrusGameConfig citrus_preset_modern = {
 	.randomizer = CitrusBagRandomizer_randomizer,
 	.clear_scores = {0, 100, 300, 500, 800},
 	.mini_t_spin_scores = {100, 200, 400, 800},
-	.t_spin_scores = {400, 800, 1200, 1600}
+	.t_spin_scores = {400, 800, 1200, 1600},
+	.line_clear_delay = 30
 };
 
 // preset config for classic games, currently missing some features like no
@@ -81,6 +82,7 @@ const CitrusGameConfig citrus_preset_classic = {
 	.clear_scores = {0, 40, 100, 300, 1200},
 	.t_spin_scores = {0, 40, 100, 300},
 	.mini_t_spin_scores = {0, 40, 100, 300},
+	.line_clear_delay = 30
 };
 
 void CitrusPiece_init(CitrusPiece *piece, const CitrusCell *piece_data,
@@ -191,6 +193,7 @@ void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 	game->hold_piece = NULL;
 	game->alive = true;
 	game->score = 0;
+	game->line_clear_delay = 0;
 	CitrusGame_reset_piece(game);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
@@ -276,7 +279,11 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	if (CitrusGame_collided(game)) {
 		game->alive = false;
 	} else {
-		CitrusGame_draw_piece(game, false);
+		if (cleared_lines > 0 && game->config.line_clear_delay > 0) {
+			game->line_clear_delay = game->config.line_clear_delay;
+		} else {
+			CitrusGame_draw_piece(game, false);
+		}
 	}
 }
 
@@ -319,6 +326,8 @@ bool CitrusGame_rotate_piece(CitrusGame *game, int n)
 void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 {
 	if (!game->alive)
+		return;
+	if (game->line_clear_delay > 0)
 		return;
 	bool moved = false;
 	switch (key) {
@@ -372,6 +381,13 @@ void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 // runs 60 times per second
 void CitrusGame_tick(CitrusGame *game)
 {
+	if (game->line_clear_delay > 0) {
+		game->line_clear_delay--;
+		if (game->line_clear_delay == 0) {
+			CitrusGame_draw_piece(game, false);
+		}
+		return;
+	}
 	CitrusGame_draw_piece(game, true);
 	game->current_y--;
 	bool on_ground = CitrusGame_collided(game);
@@ -448,14 +464,16 @@ const CitrusPiece *CitrusBagRandomizer_randomizer(void *data)
 }
 
 // initialise a classic randomiser with a fixed seed
-void CitrusClassicRandomizer_init(CitrusClassicRandomizer * randomizer, int seed) {
+void CitrusClassicRandomizer_init(CitrusClassicRandomizer *randomizer, int seed)
+{
 	randomizer->state = seed;
 	randomizer->previous_piece = -1;
 }
 
 // get next piece
-const CitrusPiece *CitrusClassicRandomizer_randomizer(void *data) {
-	CitrusClassicRandomizer* randomizer = data;
+const CitrusPiece *CitrusClassicRandomizer_randomizer(void *data)
+{
+	CitrusClassicRandomizer *randomizer = data;
 	int piece = Citrus_random(&randomizer->state) % 8;
 	if (piece == 7 || piece == randomizer->previous_piece) {
 		piece = Citrus_random(&randomizer->state) % 7;
@@ -465,7 +483,8 @@ const CitrusPiece *CitrusClassicRandomizer_randomizer(void *data) {
 }
 
 // generate a random number betweem 0 and 2^32 - 1
-uint32_t Citrus_random(uint64_t * state) {
+uint32_t Citrus_random(uint64_t *state)
+{
 	// algorithm taken from
 	// https://en.wikipedia.org/wiki/Linear_congruential_generator
 	*state *= 6364136223846793005ULL;
