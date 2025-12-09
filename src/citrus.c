@@ -68,6 +68,22 @@ const CitrusGameConfig citrus_preset_modern = {
 	.line_clear_delay = 30
 };
 
+// preset config for delayless modern games
+const CitrusGameConfig citrus_preset_delayless = {
+	.width = 10,
+	.height = 20,
+	.full_height = 40,
+	.next_piece_queue_size = 3,
+	.gravity = 1.0 / 60.0,
+	.max_move_reset = 15,
+	.lock_delay = 30,
+	.randomizer = CitrusBagRandomizer_randomizer,
+	.clear_scores = {0, 100, 300, 500, 800},
+	.mini_t_spin_scores = {100, 200, 400, 800},
+	.t_spin_scores = {400, 800, 1200, 1600},
+	.line_clear_delay = 0
+};
+
 // preset config for classic games, currently missing some features like no
 // hold and classic randomiser
 const CitrusGameConfig citrus_preset_classic = {

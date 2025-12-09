@@ -138,6 +138,7 @@ typedef struct {
 
 extern const CitrusPiece citrus_pieces[7];
 extern const CitrusGameConfig citrus_preset_modern;
+extern const CitrusGameConfig citrus_preset_delayless;
 extern const CitrusGameConfig citrus_preset_classic;
 
 /**
