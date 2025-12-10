@@ -66,7 +66,7 @@ const CitrusPiece *loop_randomizer(void *data)
 	return piece;
 }
 
-int main()
+int main(void)
 {
 	test_config = citrus_preset_modern;
 	test_config.randomizer = loop_randomizer;

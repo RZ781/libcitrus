@@ -27,7 +27,7 @@ void add_piece(int x, int y, CitrusCellType type)
 	set_piece(x + 1, y + 1, type, CITRUS_COLOR_O);
 }
 
-void hard_drop_test()
+void hard_drop_test(void)
 {
 	CitrusGame game;
 	LoopRandomizer randomizer_data = {.length = 1,.position = 0,.pieces =

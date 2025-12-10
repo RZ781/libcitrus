@@ -23,7 +23,7 @@
 #include "citrus.h"
 #include "tests.h"
 
-void rotation_test()
+void rotation_test(void)
 {
 	clear_board();
 	CitrusGame game;

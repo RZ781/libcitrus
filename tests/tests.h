@@ -37,8 +37,8 @@ void set_piece(int x, int y, CitrusCellType type, CitrusColor color);
 void assert_expected(void);
 
 const CitrusPiece *loop_randomizer(void *data);
-void hard_drop_test();
-void movement_test();
-void rotation_test();
+void hard_drop_test(void);
+void movement_test(void);
+void rotation_test(void);
 
 #endif

@@ -46,7 +46,7 @@ void assert_position(int piece_x, int piece_y)
 	}
 }
 
-void movement_test()
+void movement_test(void)
 {
 	clear_board();
 	LoopRandomizer randomizer_data = {.length = 1,.position = 0,.pieces =
