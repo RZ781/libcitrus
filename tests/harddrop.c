@@ -19,14 +19,6 @@
 #include "citrus.h"
 #include "tests.h"
 
-void add_piece(int x, int y, CitrusCellType type)
-{
-	set_piece(x, y, type, CITRUS_COLOR_O);
-	set_piece(x + 1, y, type, CITRUS_COLOR_O);
-	set_piece(x, y + 1, type, CITRUS_COLOR_O);
-	set_piece(x + 1, y + 1, type, CITRUS_COLOR_O);
-}
-
 void hard_drop_test(void)
 {
 	CitrusGame game;
@@ -37,20 +29,20 @@ void hard_drop_test(void)
 			&randomizer_data);
 
 	clear_board();
-	add_piece(4, 21, CITRUS_CELL_FULL);
-	add_piece(4, 0, CITRUS_CELL_SHADOW);
+	set_o_piece(4, 21, CITRUS_CELL_FULL);
+	set_o_piece(4, 0, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
-	add_piece(4, 0, CITRUS_CELL_FULL);
-	add_piece(4, 2, CITRUS_CELL_SHADOW);
+	set_o_piece(4, 0, CITRUS_CELL_FULL);
+	set_o_piece(4, 2, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
-	add_piece(4, 2, CITRUS_CELL_FULL);
-	add_piece(4, 4, CITRUS_CELL_SHADOW);
+	set_o_piece(4, 2, CITRUS_CELL_FULL);
+	set_o_piece(4, 4, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
-	add_piece(2, 0, CITRUS_CELL_FULL);
+	set_o_piece(2, 0, CITRUS_CELL_FULL);
 	assert_expected();
 }

@@ -57,6 +57,14 @@ void set_piece(int x, int y, CitrusCellType type, CitrusColor color)
 	expected_board[y * 10 + x].color = color;
 }
 
+void set_o_piece(int x, int y, CitrusCellType type)
+{
+	set_piece(x, y, type, CITRUS_COLOR_O);
+	set_piece(x + 1, y, type, CITRUS_COLOR_O);
+	set_piece(x, y + 1, type, CITRUS_COLOR_O);
+	set_piece(x + 1, y + 1, type, CITRUS_COLOR_O);
+}
+
 const CitrusPiece *loop_randomizer(void *data)
 {
 	LoopRandomizer *loop = data;

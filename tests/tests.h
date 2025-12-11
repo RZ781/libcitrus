@@ -34,6 +34,7 @@ extern const CitrusPiece *next_piece_queue[3];
 
 void clear_board(void);
 void set_piece(int x, int y, CitrusCellType type, CitrusColor color);
+void set_o_piece(int x, int y, CitrusCellType type);
 void assert_expected(void);
 
 const CitrusPiece *loop_randomizer(void *data);
