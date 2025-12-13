@@ -65,18 +65,19 @@ typedef struct {
 } CitrusPiece;
 
 typedef struct {
-	int width;
-	int height;
-	int full_height;
-	int next_piece_queue_size;
-	double gravity;
-	int lock_delay;
-	int max_move_reset;
-	const CitrusPiece *(*randomizer)(void *);
-	int clear_scores[5];
-	int t_spin_scores[4];
-	int mini_t_spin_scores[4];
-	int line_clear_delay;
+	int width;		// width of the board
+	int height;		// height pieces spawn at, suggested height to display
+	int full_height;	// height of the board
+	int next_piece_queue_size;	// how many next pieces to show
+	double gravity;		// cells moved per tick
+	int lock_delay;		// number of ticks before locking on ground
+	int max_move_reset;	// maximum times lock delay can be reset by moving
+	const CitrusPiece *(*randomizer)(void *);	// randomizer function
+	int clear_scores[5];	// score given by clearing 0 to 4 lines
+	int t_spin_scores[4];	// score given spin zero to triple
+	int mini_t_spin_scores[4];	// score given by mini spins zero to triple
+	int line_clear_delay;	// ticks before next piece after clearing lines
+	bool shadow;		// whether or not to display shadows
 } CitrusGameConfig;
 
 typedef struct {

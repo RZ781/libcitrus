@@ -65,7 +65,8 @@ const CitrusGameConfig citrus_preset_modern = {
 	.clear_scores = {0, 100, 300, 500, 800},
 	.mini_t_spin_scores = {100, 200, 400, 800},
 	.t_spin_scores = {400, 800, 1200, 1600},
-	.line_clear_delay = 30
+	.line_clear_delay = 30,
+	.shadow = true
 };
 
 // preset config for delayless modern games
@@ -81,7 +82,8 @@ const CitrusGameConfig citrus_preset_delayless = {
 	.clear_scores = {0, 100, 300, 500, 800},
 	.mini_t_spin_scores = {100, 200, 400, 800},
 	.t_spin_scores = {400, 800, 1200, 1600},
-	.line_clear_delay = 0
+	.line_clear_delay = 0,
+	.shadow = true
 };
 
 // preset config for classic games, currently missing some features like no
@@ -98,7 +100,8 @@ const CitrusGameConfig citrus_preset_classic = {
 	.clear_scores = {0, 40, 100, 300, 1200},
 	.t_spin_scores = {0, 40, 100, 300},
 	.mini_t_spin_scores = {0, 40, 100, 300},
-	.line_clear_delay = 30
+	.line_clear_delay = 30,
+	.shadow = false
 };
 
 void CitrusPiece_init(CitrusPiece *piece, const CitrusCell *piece_data,
@@ -169,15 +172,17 @@ void CitrusGame_draw_piece(CitrusGame *game, bool clear)
 	if (clear) {
 		CitrusGame_draw_piece_inner(game, CITRUS_CELL_EMPTY);
 	}
-	int y = game->current_y;
-	while (!CitrusGame_collided(game)) {
-		game->current_y--;
+	if (game->config.shadow) {
+		int y = game->current_y;
+		while (!CitrusGame_collided(game)) {
+			game->current_y--;
+		}
+		game->current_y++;
+		CitrusGame_draw_piece_inner(game,
+					    clear ? CITRUS_CELL_EMPTY :
+					    CITRUS_CELL_SHADOW);
+		game->current_y = y;
 	}
-	game->current_y++;
-	CitrusGame_draw_piece_inner(game,
-				    clear ? CITRUS_CELL_EMPTY :
-				    CITRUS_CELL_SHADOW);
-	game->current_y = y;
 	if (!clear) {
 		CitrusGame_draw_piece_inner(game, CITRUS_CELL_FULL);
 	}
