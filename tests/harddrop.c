@@ -30,15 +30,12 @@ void hard_drop_test(void)
 
 	clear_board();
 	set_o_piece(4, 21, CITRUS_CELL_FULL);
-	set_o_piece(4, 0, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
 	set_o_piece(4, 0, CITRUS_CELL_FULL);
-	set_o_piece(4, 2, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_HARD_DROP);
 	set_o_piece(4, 2, CITRUS_CELL_FULL);
-	set_o_piece(4, 4, CITRUS_CELL_SHADOW);
 	assert_expected();
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
 	CitrusGame_key_down(&game, CITRUS_KEY_LEFT);

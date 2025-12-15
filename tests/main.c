@@ -26,18 +26,29 @@ CitrusCell board[10 * 40];
 CitrusCell expected_board[10 * 40];
 const CitrusPiece *next_piece_queue[3];
 
+const char piece_names[7] = { 'I', 'L', 'J', 'O', 'S', 'Z' };
+const char *const cell_type_names[3] = { "empty", "shadow", "full" };
+
 void assert_expected(void)
 {
 	for (int y = 0; y < 40; y++) {
 		for (int x = 0; x < 10; x++) {
-			bool cell = board[y * 10 + x].type == CITRUS_CELL_FULL;
-			bool expected =
-			    expected_board[y * 10 + x].type == CITRUS_CELL_FULL;
-			if (cell != expected) {
+			CitrusCell cell = board[y * 10 + x];
+			CitrusCell expected = expected_board[y * 10 + x];
+			if (cell.type != expected.type) {
 				fprintf(stderr, "assert_expected(): "
 					"expected %s cell at (%i, %i), got %s cell\n",
-					expected ? "full" : "empty", x, y,
-					cell ? "full" : "empty");
+					cell_type_names[expected.type], x, y,
+					cell_type_names[cell.type]);
+				abort();
+			}
+			if (cell.type != CITRUS_CELL_EMPTY
+			    && cell.color != expected.color) {
+				fprintf(stderr,
+					"assert_expected(): "
+					"expected %c cell at (%i, %i), got %c cell\n",
+					piece_names[expected.color], x, y,
+					piece_names[cell.color]);
 				abort();
 			}
 		}
@@ -78,6 +89,7 @@ int main(void)
 {
 	test_config = citrus_preset_modern;
 	test_config.randomizer = loop_randomizer;
+	test_config.shadow = false;
 	hard_drop_test();
 	rotation_test();
 	movement_test();

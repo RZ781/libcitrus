@@ -31,6 +31,8 @@ extern CitrusGameConfig test_config;
 extern CitrusCell board[10 * 40];
 extern CitrusCell expected_board[10 * 40];
 extern const CitrusPiece *next_piece_queue[3];
+extern const char piece_names[7];
+extern const char *const cell_type_names[3];
 
 void clear_board(void);
 void set_piece(int x, int y, CitrusCellType type, CitrusColor color);

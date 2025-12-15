@@ -104,6 +104,7 @@ const CitrusGameConfig citrus_preset_classic = {
 	.shadow = false
 };
 
+// initialise a citrus piece
 void CitrusPiece_init(CitrusPiece *piece, const CitrusCell *piece_data,
 		      int n_rotation_states, int width, int height, int spawn_y)
 {
