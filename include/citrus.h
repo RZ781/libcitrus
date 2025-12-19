@@ -66,7 +66,7 @@ typedef struct {
 
 typedef struct {
 	int width;		// width of the board
-	int height;		// height pieces spawn at, suggested height to display
+	int height;		// spawn height, suggested display height
 	int full_height;	// height of the board
 	int next_piece_queue_size;	// how many next pieces to show
 	double gravity;		// cells moved per tick
@@ -98,6 +98,7 @@ typedef struct {
 	int lowest_y;
 	int score;
 	int line_clear_delay;
+	bool b2b;
 } CitrusGame;
 
 typedef struct {

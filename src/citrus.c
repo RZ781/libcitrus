@@ -216,6 +216,7 @@ void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 	game->alive = true;
 	game->score = 0;
 	game->line_clear_delay = 0;
+	game->b2b = false;
 	CitrusGame_reset_piece(game);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
@@ -297,7 +298,14 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	if (cleared_lines > 4) {
 		cleared_lines = 4;
 	}
-	game->score += game->config.clear_scores[cleared_lines];
+	int score = game->config.clear_scores[cleared_lines];
+	if (game->b2b && cleared_lines >= 4) {
+		score *= 1.5;
+	}
+	game->score += score;
+	if (cleared_lines != 0) {
+		game->b2b = cleared_lines >= 4;
+	}
 	if (CitrusGame_collided(game)) {
 		game->alive = false;
 	} else {
