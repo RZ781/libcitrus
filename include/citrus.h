@@ -99,6 +99,7 @@ typedef struct {
 	int score;
 	int line_clear_delay;
 	bool b2b;
+	int combo;
 } CitrusGame;
 
 typedef struct {
