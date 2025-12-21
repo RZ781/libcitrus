@@ -74,6 +74,7 @@ typedef struct {
 	int max_move_reset;	// maximum times lock delay can be reset by moving
 	const CitrusPiece *(*randomizer)(void *);	// randomizer function
 	int clear_scores[5];	// score given by clearing 0 to 4 lines
+	int all_clear_scores[5];	// score given by  0 to 4 line all clear
 	int t_spin_scores[4];	// score given spin zero to triple
 	int mini_t_spin_scores[4];	// score given by mini spins zero to triple
 	int line_clear_delay;	// ticks before next piece after clearing lines

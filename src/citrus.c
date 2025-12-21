@@ -63,6 +63,7 @@ const CitrusGameConfig citrus_preset_modern = {
 	.lock_delay = 30,
 	.randomizer = CitrusBagRandomizer_randomizer,
 	.clear_scores = {0, 100, 300, 500, 800},
+	.all_clear_scores = {0, 800, 1200, 1800, 2000},
 	.mini_t_spin_scores = {100, 200, 400, 800},
 	.t_spin_scores = {400, 800, 1200, 1600},
 	.line_clear_delay = 30,
@@ -80,6 +81,7 @@ const CitrusGameConfig citrus_preset_delayless = {
 	.lock_delay = 30,
 	.randomizer = CitrusBagRandomizer_randomizer,
 	.clear_scores = {0, 100, 300, 500, 800},
+	.all_clear_scores = {0, 800, 1200, 1800, 2000},
 	.mini_t_spin_scores = {100, 200, 400, 800},
 	.t_spin_scores = {400, 800, 1200, 1600},
 	.line_clear_delay = 0,
@@ -98,6 +100,7 @@ const CitrusGameConfig citrus_preset_classic = {
 	.lock_delay = 48,
 	.randomizer = CitrusClassicRandomizer_randomizer,
 	.clear_scores = {0, 40, 100, 300, 1200},
+	.all_clear_scores = {0, 0, 0, 0, 0},
 	.t_spin_scores = {0, 40, 100, 300},
 	.mini_t_spin_scores = {0, 40, 100, 300},
 	.line_clear_delay = 30,
@@ -296,12 +299,26 @@ void CitrusGame_lock_piece(CitrusGame *game)
 			y--;
 		}
 	}
+	bool all_clear = true;
+	for (int i = 0; i < game->config.width * game->config.full_height; i++) {
+		if (game->board[i].type == CITRUS_CELL_FULL) {
+			all_clear = false;
+			break;
+		}
+	}
 	if (cleared_lines > 4) {
 		cleared_lines = 4;
 	}
 	int score = game->config.clear_scores[cleared_lines];
-	if (game->b2b && cleared_lines >= 4) {
+	if (game->b2b && cleared_lines == 4) {
 		score *= 1.5;
+	}
+	if (all_clear) {
+		if (game->b2b && cleared_lines == 4) {
+			score += 3200;
+		} else {
+			score += game->config.all_clear_scores[cleared_lines];
+		}
 	}
 	score += 50 * game->combo;
 	game->score += score;
