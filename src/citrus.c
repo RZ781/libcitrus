@@ -20,36 +20,19 @@
 #include <stddef.h>
 #include "citrus.h"
 
-// x coordinates of SRS kicks for all pieces besides I
-const int KICK_TABLE_X[4][5] = {
-	{0, -1, -1, 0, -1},
-	{0, 1, 1, 0, 1},
-	{0, 1, 1, 0, 1},
-	{0, -1, -1, 0, -1}
+// SRS kicks for all pieces besides I
+const CitrusVector KICK_TABLE[4][5] = {
+	{{0, 0}, {-1, 0}, {-1, 1}, {0, -2}, {-1, -2}},
+	{{0, 0}, {1, 0}, {1, -1}, {0, 2}, {1, 2}},
+	{{0, 0}, {1, 0}, {1, 1}, {0, -2}, {1, -2}},
+	{{0, 0}, {-1, 0}, {-1, -1}, {0, 2}, {-1, 2}},
 };
 
-// y coordinates of SRS kicks for all pieces besides I
-const int KICK_TABLE_Y[4][5] = {
-	{0, 0, 1, -2, -2},
-	{0, 0, -1, 2, 2},
-	{0, 0, 1, -2, -2},
-	{0, 0, -1, 2, 2}
-};
-
-// x coordinates of SRS kicks for I pieces
-const int I_KICK_TABLE_X[4][5] = {
-	{0, -2, 1, -2, 1},
-	{0, -1, 2, -1, 2},
-	{0, 2, -1, 2, -1},
-	{0, 1, -2, 1, -2}
-};
-
-// y coordinates of SRS kicks for I pieces
-const int I_KICK_TABLE_Y[4][5] = {
-	{0, 0, 0, -1, 2},
-	{0, 0, 0, 2, -1},
-	{0, 0, 0, 1, -2},
-	{0, 0, 0, -2, 1}
+const CitrusVector I_KICK_TABLE[4][5] = {
+	{{0, 0}, {-2, 0}, {1, 0}, {-2, -1}, {1, 2}},
+	{{0, 0}, {-1, 0}, {2, 0}, {-1, 2}, {2, -1}},
+	{{0, 0}, {2, 0}, {-1, 0}, {2, 1}, {-1, -2}},
+	{{0, 0}, {1, 0}, {-2, 0}, {1, -2}, {-2, 1}}
 };
 
 // preset config for modern games
@@ -107,6 +90,18 @@ const CitrusGameConfig citrus_preset_classic = {
 	.shadow = false
 };
 
+CitrusVector CitrusVector_add(CitrusVector a, CitrusVector b)
+{
+	return (CitrusVector) {
+	a.x + b.x, a.y + b.y};
+}
+
+CitrusVector CitrusVector_negate(CitrusVector a)
+{
+	return (CitrusVector) {
+	-a.x, -a.y};
+}
+
 // initialise a citrus piece
 void CitrusPiece_init(CitrusPiece *piece, const CitrusCell *piece_data,
 		      int n_rotation_states, int width, int height, int spawn_y)
@@ -123,7 +118,7 @@ bool CitrusGame_collided(CitrusGame *game)
 {
 	int width = game->current_piece->width;
 	int height = game->current_piece->height;
-	int rotation = game->current_rotation;
+	int rotation = game->rotation;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			// index of the current cell in piece_data
@@ -131,12 +126,12 @@ bool CitrusGame_collided(CitrusGame *game)
 			if (game->current_piece->piece_data[index].type !=
 			    CITRUS_CELL_FULL)
 				continue;
-			if (x + game->current_x < 0 || y + game->current_y < 0
-			    || x + game->current_x >= game->config.width
-			    || y + game->current_y >= game->config.full_height
-			    || game->board[(y + game->current_y) *
+			if (x + game->position.x < 0 || y + game->position.y < 0
+			    || x + game->position.x >= game->config.width
+			    || y + game->position.y >= game->config.full_height
+			    || game->board[(y + game->position.y) *
 					   game->config.width + x +
-					   game->current_x].type
+					   game->position.x].type
 			    == CITRUS_CELL_FULL) {
 				return true;
 			}
@@ -150,7 +145,7 @@ void CitrusGame_draw_piece_inner(CitrusGame *game, CitrusCellType type)
 {
 	int width = game->current_piece->width;
 	int height = game->current_piece->height;
-	int rotation = game->current_rotation;
+	int rotation = game->rotation;
 	for (int dy = 0; dy < height; dy++) {
 		for (int dx = 0; dx < width; dx++) {
 			// index of current cell in piece_data
@@ -159,8 +154,8 @@ void CitrusGame_draw_piece_inner(CitrusGame *game, CitrusCellType type)
 			if (cell.type != CITRUS_CELL_FULL)
 				continue;
 			cell.type = type;
-			int x = game->current_x + dx;
-			int y = game->current_y + dy;
+			int x = game->position.x + dx;
+			int y = game->position.y + dy;
 			if (x < 0 || x >= game->config.width || y < 0
 			    || y >= game->config.full_height) {
 				continue;
@@ -177,15 +172,15 @@ void CitrusGame_draw_piece(CitrusGame *game, bool clear)
 		CitrusGame_draw_piece_inner(game, CITRUS_CELL_EMPTY);
 	}
 	if (game->config.shadow) {
-		int y = game->current_y;
+		int y = game->position.y;
 		while (!CitrusGame_collided(game)) {
-			game->current_y--;
+			game->position.y--;
 		}
-		game->current_y++;
+		game->position.y++;
 		CitrusGame_draw_piece_inner(game,
 					    clear ? CITRUS_CELL_EMPTY :
 					    CITRUS_CELL_SHADOW);
-		game->current_y = y;
+		game->position.y = y;
 	}
 	if (!clear) {
 		CitrusGame_draw_piece_inner(game, CITRUS_CELL_FULL);
@@ -195,14 +190,15 @@ void CitrusGame_draw_piece(CitrusGame *game, bool clear)
 // resets current piece to spawn state
 void CitrusGame_reset_piece(CitrusGame *game)
 {
-	game->current_x = (game->config.width - game->current_piece->width) / 2;
-	game->current_y = game->current_piece->spawn_y + game->config.height;
+	game->position.x =
+	    (game->config.width - game->current_piece->width) / 2;
+	game->position.y = game->current_piece->spawn_y + game->config.height;
 	game->fall_amount = 0;
 	game->held = false;
-	game->current_rotation = 0;
+	game->rotation = 0;
 	game->lock_delay = game->config.lock_delay;
 	game->move_reset_count = 0;
-	game->lowest_y = game->current_y;
+	game->lowest_y = game->position.y;
 }
 
 // initialise a citrus game
@@ -235,15 +231,15 @@ void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 bool CitrusGame_move_piece(CitrusGame *game, int dx, int dy)
 {
 	CitrusGame_draw_piece(game, true);
-	game->current_x += dx;
-	game->current_y += dy;
+	CitrusVector prev_position = game->position;
+	game->position = CitrusVector_add(game->position, (CitrusVector) {
+					  dx, dy});
 	bool collided = CitrusGame_collided(game);
 	if (collided) {
-		game->current_x -= dx;
-		game->current_y -= dy;
+		game->position = prev_position;
 	}
-	if (game->current_y < game->lowest_y) {
-		game->lowest_y = game->current_y;
+	if (game->position.y < game->lowest_y) {
+		game->lowest_y = game->position.y;
 		game->move_reset_count = 0;
 		game->lock_delay = game->config.lock_delay;
 	}
@@ -343,32 +339,30 @@ void CitrusGame_lock_piece(CitrusGame *game)
 bool CitrusGame_rotate_piece(CitrusGame *game, int n)
 {
 	CitrusGame_draw_piece(game, true);
-	int prev_rotation = game->current_rotation;
-	int prev_x = game->current_x;
-	int prev_y = game->current_y;
-	game->current_rotation += n + game->current_piece->n_rotation_states;
-	game->current_rotation %= game->current_piece->n_rotation_states;
+	int prev_rotation = game->rotation;
+	CitrusVector prev_position = game->position;
+	game->rotation += n + game->current_piece->n_rotation_states;
+	game->rotation %= game->current_piece->n_rotation_states;
 	// do srs kick
 	bool success = false;
-	int row = n > 0 ? prev_rotation : game->current_rotation;
-	int sign = n > 0 ? 1 : -1;
+	int row = n > 0 ? prev_rotation : game->rotation;
 	bool i_piece = game->current_piece == &citrus_pieces[CITRUS_COLOR_I];
-	const int *kick_table_x =
-	    i_piece ? I_KICK_TABLE_X[row] : KICK_TABLE_X[row];
-	const int *kick_table_y =
-	    i_piece ? I_KICK_TABLE_Y[row] : KICK_TABLE_Y[row];
+	const CitrusVector *kick_table =
+	    i_piece ? I_KICK_TABLE[row] : KICK_TABLE[row];
 	for (int i = 0; i < 5; i++) {
-		game->current_x = prev_x + sign * kick_table_x[i];
-		game->current_y = prev_y + sign * kick_table_y[i];
+		CitrusVector offset = kick_table[i];
+		if (n < 0) {
+			offset = CitrusVector_negate(offset);
+		}
+		game->position = CitrusVector_add(prev_position, offset);
 		if (!CitrusGame_collided(game)) {
 			success = true;
 			break;
 		}
 	}
 	if (!success) {
-		game->current_rotation = prev_rotation;
-		game->current_x = prev_x;
-		game->current_y = prev_y;
+		game->rotation = prev_rotation;
+		game->position = prev_position;
 	}
 	CitrusGame_draw_piece(game, false);
 	return success;
@@ -441,9 +435,9 @@ void CitrusGame_tick(CitrusGame *game)
 		return;
 	}
 	CitrusGame_draw_piece(game, true);
-	game->current_y--;
+	game->position.y--;
 	bool on_ground = CitrusGame_collided(game);
-	game->current_y++;
+	game->position.y++;
 	CitrusGame_draw_piece(game, false);
 	if (on_ground) {
 		// lock delay

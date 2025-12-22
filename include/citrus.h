@@ -82,6 +82,11 @@ typedef struct {
 } CitrusGameConfig;
 
 typedef struct {
+	int x;
+	int y;
+} CitrusVector;
+
+typedef struct {
 	CitrusGameConfig config;
 	CitrusCell *board;
 	void *randomizer_data;
@@ -89,10 +94,9 @@ typedef struct {
 	const CitrusPiece *hold_piece;
 	const CitrusPiece **next_piece_queue;
 	bool held;
-	int current_x;
-	int current_y;
+	CitrusVector position;
 	double fall_amount;
-	int current_rotation;
+	int rotation;
 	bool alive;
 	int lock_delay;
 	int move_reset_count;
