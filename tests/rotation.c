@@ -31,7 +31,7 @@ void rotation_test(void)
 		    (const CitrusPiece *[]) {citrus_pieces + CITRUS_COLOR_T}
 	};
 	CitrusGame_init(&game, board, next_piece_queue, test_config,
-			&randomizer_data);
+			&randomizer_data, NULL);
 
 	clear_board();
 	set_piece(3, 21, CITRUS_CELL_FULL, CITRUS_COLOR_T);

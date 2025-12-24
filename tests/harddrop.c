@@ -26,7 +26,7 @@ void hard_drop_test(void)
 		    (const CitrusPiece *[]) {citrus_pieces + CITRUS_COLOR_O}
 	};
 	CitrusGame_init(&game, board, next_piece_queue, test_config,
-			&randomizer_data);
+			&randomizer_data, NULL);
 
 	clear_board();
 	set_o_piece(4, 21, CITRUS_CELL_FULL);

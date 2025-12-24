@@ -79,6 +79,7 @@ typedef struct {
 	int mini_t_spin_scores[4];	// score given by mini spins zero to triple
 	int line_clear_delay;	// ticks before next piece after clearing lines
 	bool shadow;		// whether or not to display shadows
+	void (*action_text)(void *, int, int, bool, bool);	// arguments: lines cleared, combo, b2b, all clear
 } CitrusGameConfig;
 
 typedef struct {
@@ -90,6 +91,7 @@ typedef struct {
 	CitrusGameConfig config;
 	CitrusCell *board;
 	void *randomizer_data;
+	void *action_text_data;
 	const CitrusPiece *current_piece;
 	const CitrusPiece *hold_piece;
 	const CitrusPiece **next_piece_queue;
@@ -177,7 +179,8 @@ void CitrusPiece_init(CitrusPiece * piece, const CitrusCell * piece_data,
  */
 void CitrusGame_init(CitrusGame * game, CitrusCell * board,
 		     const CitrusPiece ** next_piece_queue,
-		     CitrusGameConfig config, void *randomizer_data);
+		     CitrusGameConfig config, void *randomizer_data,
+		     void *action_text_data);
 
 /**
  * @brief Indicates a key has been pressed.

@@ -50,7 +50,8 @@ const CitrusGameConfig citrus_preset_modern = {
 	.mini_t_spin_scores = {100, 200, 400, 800},
 	.t_spin_scores = {400, 800, 1200, 1600},
 	.line_clear_delay = 30,
-	.shadow = true
+	.shadow = true,
+	.action_text = NULL,
 };
 
 // preset config for delayless modern games
@@ -68,7 +69,8 @@ const CitrusGameConfig citrus_preset_delayless = {
 	.mini_t_spin_scores = {100, 200, 400, 800},
 	.t_spin_scores = {400, 800, 1200, 1600},
 	.line_clear_delay = 0,
-	.shadow = true
+	.shadow = true,
+	.action_text = NULL,
 };
 
 // preset config for classic games, currently missing some features like no
@@ -87,7 +89,8 @@ const CitrusGameConfig citrus_preset_classic = {
 	.t_spin_scores = {0, 40, 100, 300},
 	.mini_t_spin_scores = {0, 40, 100, 300},
 	.line_clear_delay = 30,
-	.shadow = false
+	.shadow = false,
+	.action_text = NULL,
 };
 
 CitrusVector CitrusVector_add(CitrusVector a, CitrusVector b)
@@ -204,10 +207,12 @@ void CitrusGame_reset_piece(CitrusGame *game)
 // initialise a citrus game
 void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 		     const CitrusPiece **next_piece_queue,
-		     CitrusGameConfig config, void *randomizer_data)
+		     CitrusGameConfig config, void *randomizer_data,
+		     void *action_text_data)
 {
 	game->config = config;
 	game->randomizer_data = randomizer_data;
+	game->action_text_data = action_text_data;
 	game->board = board;
 	game->next_piece_queue = next_piece_queue;
 	game->current_piece = config.randomizer(randomizer_data);
@@ -332,6 +337,10 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		} else {
 			CitrusGame_draw_piece(game, false);
 		}
+	}
+	if (game->config.action_text) {
+		game->config.action_text(game->action_text_data, cleared_lines,
+					 game->combo, game->b2b, all_clear);
 	}
 }
 

@@ -31,7 +31,7 @@ void movement_test(void)
 		    (const CitrusPiece *[]) {citrus_pieces + CITRUS_COLOR_O}
 	};
 	CitrusGame_init(&game, board, next_piece_queue, test_config,
-			&randomizer_data);
+			&randomizer_data, NULL);
 	int x = 4;
 	for (int i = 0; i < 4; i++) {
 		CitrusGame_key_down(&game, CITRUS_KEY_LEFT);
