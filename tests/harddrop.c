@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <stdlib.h>
 #include "citrus.h"
 #include "tests.h"
 
