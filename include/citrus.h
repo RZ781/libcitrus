@@ -79,7 +79,8 @@ typedef struct {
 	int mini_t_spin_scores[4];	// score given by mini spins zero to triple
 	int line_clear_delay;	// ticks before next piece after clearing lines
 	bool shadow;		// whether or not to display shadows
-	void (*action_text)(void *, int, int, bool, bool);	// arguments: lines cleared, combo, b2b, all clear
+	// arguments: lines cleared, combo, b2b, all clear, spin, mini spin
+	void (*action_text)(void *, int, int, bool, bool, bool, bool);
 } CitrusGameConfig;
 
 typedef struct {
@@ -218,7 +219,7 @@ bool CitrusGame_is_alive(CitrusGame * game);
  * @param y Y coordinate of the cell
  * @return Cell at the specified location
  */
-CitrusCell CitrusGame_get_cell(CitrusGame * game, int x, int y);
+CitrusCell CitrusGame_get_cell(CitrusGame * game, CitrusVector position);
 
 /**
  * @brief Gets a piece in the next piece queue.
