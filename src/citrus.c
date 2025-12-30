@@ -349,11 +349,12 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		cleared_lines = 4;
 	}
 	int score = game->config.clear_scores[cleared_lines];
-	if (game->b2b && cleared_lines >= 4) {
+	bool b2b = spin || mini_spin || cleared_lines == 4;
+	if (game->b2b && b2b) {
 		score *= 1.5;
 	}
 	if (all_clear) {
-		if (game->b2b && cleared_lines == 4) {
+		if (game->b2b && b2b) {
 			score += 3200;
 		} else {
 			score += game->config.all_clear_scores[cleared_lines];
@@ -363,11 +364,11 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	game->score += score;
 	if (game->config.action_text) {
 		game->config.action_text(game->action_text_data, cleared_lines,
-					 game->combo, game->b2b, all_clear,
+					 game->combo, game->b2b && b2b, all_clear,
 					 spin, mini_spin);
 	}
 	if (cleared_lines != 0) {
-		game->b2b = cleared_lines >= 4;
+		game->b2b = b2b;
 		game->combo++;
 	} else {
 		game->combo = 0;
