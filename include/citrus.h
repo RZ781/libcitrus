@@ -38,7 +38,8 @@ typedef enum {
 typedef enum {
 	CITRUS_CELL_EMPTY,
 	CITRUS_CELL_SHADOW,
-	CITRUS_CELL_FULL
+	CITRUS_CELL_FULL,
+	CITRUS_CELL_WALL
 } CitrusCellType;
 
 typedef enum {

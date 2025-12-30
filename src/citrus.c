@@ -290,18 +290,19 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		CitrusVector center =
 		    CitrusVector_add(game->position, (CitrusVector) { 1, 1 });
 		for (int i = 0; i < 4; i++) {
-			if (CitrusGame_get_cell
-			    (game,
-			     CitrusVector_add(center,
-					      corner)).type ==
-			    CITRUS_CELL_FULL) {
+			CitrusCell cell = CitrusGame_get_cell(game,
+							      CitrusVector_add
+							      (center,
+							       corner));
+			if (cell.type == CITRUS_CELL_FULL
+			    || cell.type == CITRUS_CELL_WALL) {
 				corners[i / 2]++;
 			}
 			corner = CitrusVector_rotate_clockwise(corner);
 		}
 		if (corners[0] == 2 && corners[1] >= 1) {
 			spin = true;
-		} else if (corners[0] == 1 && corners[2] == 2) {
+		} else if (corners[0] == 1 && corners[1] == 2) {
 			mini_spin = true;
 		}
 	}
@@ -371,8 +372,8 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	game->score += score;
 	if (game->config.action_text) {
 		game->config.action_text(game->action_text_data, cleared_lines,
-					 game->combo, game->b2b && b2b, all_clear,
-					 spin, mini_spin);
+					 game->combo, game->b2b
+					 && b2b, all_clear, spin, mini_spin);
 	}
 	if (cleared_lines != 0) {
 		game->b2b = b2b;
@@ -517,7 +518,7 @@ CitrusCell CitrusGame_get_cell(CitrusGame *game, CitrusVector position)
 	if (position.x < 0 || position.x >= game->config.width || position.y < 0
 	    || position.y >= game->config.full_height) {
 		return (CitrusCell) {
-		.type = CITRUS_CELL_EMPTY};
+		.type = CITRUS_CELL_WALL};
 	}
 	return game->board[position.y * game->config.width + position.x];
 }
