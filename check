@@ -30,6 +30,6 @@ if [ -n "$undefined_symbols" ] ; then
 fi
 
 # run tests
-gcc -Wall -Wextra -Wpedantic -Iinclude -Itests -g -Wl,-rpath='${ORIGIN}' -L. -lcitrus tests/*.c -o test || exit $?
+gcc -Wall -Wextra -Wpedantic -Iinclude -Itests -g tests/*.c -Wl,-rpath='${ORIGIN}' -L. -lcitrus -o test || exit $?
 ./test || exit $?
 rm test
