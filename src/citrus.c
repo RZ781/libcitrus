@@ -357,7 +357,7 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	} else {
 		score = game->config.clear_scores[cleared_lines];
 	}
-	bool b2b = spin || mini_spin || cleared_lines == 4;
+	bool b2b = (spin || mini_spin || cleared_lines == 4) && cleared_lines > 0;
 	if (game->b2b && b2b) {
 		score *= 1.5;
 	}
