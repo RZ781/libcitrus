@@ -122,6 +122,13 @@ void CitrusPiece_init(CitrusPiece *piece, const CitrusCell *piece_data,
 	piece->spawn_y = spawn_y;
 }
 
+// check if a vector is within the board
+bool CitrusGame_in_board(CitrusGame *game, CitrusVector position)
+{
+	return position.x >= 0 && position.x < game->config.width
+	    && position.y >= 0 && position.y < game->config.full_height;
+}
+
 // check if the current piece is colliding with the board
 bool CitrusGame_collided(CitrusGame *game)
 {
@@ -135,13 +142,14 @@ bool CitrusGame_collided(CitrusGame *game)
 			if (game->current_piece->piece_data[index].type !=
 			    CITRUS_CELL_FULL)
 				continue;
-			if (x + game->position.x < 0 || y + game->position.y < 0
-			    || x + game->position.x >= game->config.width
-			    || y + game->position.y >= game->config.full_height
+			if (!CitrusGame_in_board(game, (CitrusVector) {
+						 x + game->position.x,
+						 y + game->position.y}
+			    )
 			    || game->board[(y + game->position.y) *
 					   game->config.width + x +
-					   game->position.x].type
-			    == CITRUS_CELL_FULL) {
+					   game->position.x].type ==
+			    CITRUS_CELL_FULL) {
 				return true;
 			}
 		}
@@ -160,13 +168,15 @@ void CitrusGame_draw_piece_inner(CitrusGame *game, CitrusCellType type)
 			// index of current cell in piece_data
 			int i = rotation * width * height + dy * width + dx;
 			CitrusCell cell = game->current_piece->piece_data[i];
-			if (cell.type != CITRUS_CELL_FULL)
+			if (cell.type != CITRUS_CELL_FULL) {
 				continue;
+			}
 			cell.type = type;
 			int x = game->position.x + dx;
 			int y = game->position.y + dy;
-			if (x < 0 || x >= game->config.width || y < 0
-			    || y >= game->config.full_height) {
+			if (!CitrusGame_in_board(game, (CitrusVector) {
+						 x, y}
+			    )) {
 				continue;
 			}
 			game->board[y * game->config.width + x] = cell;
@@ -282,7 +292,8 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	// check t spins
 	bool spin = false;
 	bool mini_spin = false;
-	if (game->current_piece == &citrus_pieces[CITRUS_COLOR_T] && game->last_rotated) {
+	if (game->current_piece == &citrus_pieces[CITRUS_COLOR_T]
+	    && game->last_rotated) {
 		// get front left corner
 		CitrusVector corner = { -1, 1 };
 		for (int i = 0; i < game->rotation; i++) {
@@ -293,10 +304,10 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		CitrusVector center =
 		    CitrusVector_add(game->position, (CitrusVector) { 1, 1 });
 		for (int i = 0; i < 4; i++) {
-			CitrusCell cell = CitrusGame_get_cell(game,
-							      CitrusVector_add
-							      (center,
-							       corner));
+			CitrusCell cell =
+			    CitrusGame_get_cell(game,
+						CitrusVector_add(center,
+								 corner));
 			if (cell.type == CITRUS_CELL_FULL
 			    || cell.type == CITRUS_CELL_WALL) {
 				corners[i / 2]++;
@@ -325,8 +336,8 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		if (full) {
 			cleared_lines++;
 			int n_cells =
-			    game->config.width * (game->config.full_height - y -
-						  1);
+			    game->config.width *
+			    (game->config.full_height - y - 1);
 			for (int i = 0; i < n_cells; i++) {
 				game->board[i + y * game->config.width] =
 				    game->board[i +
@@ -360,7 +371,8 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	} else {
 		score = game->config.clear_scores[cleared_lines];
 	}
-	bool b2b = (spin || mini_spin || cleared_lines == 4) && cleared_lines > 0;
+	bool b2b = (spin || mini_spin || cleared_lines == 4)
+	    && cleared_lines > 0;
 	if (game->b2b && b2b) {
 		score *= 1.5;
 	}
@@ -519,8 +531,7 @@ void CitrusGame_tick(CitrusGame *game)
 // gets a cell at a location
 CitrusCell CitrusGame_get_cell(CitrusGame *game, CitrusVector position)
 {
-	if (position.x < 0 || position.x >= game->config.width || position.y < 0
-	    || position.y >= game->config.full_height) {
+	if (!CitrusGame_in_board(game, position)) {
 		return (CitrusCell) {
 		.type = CITRUS_CELL_WALL};
 	}
