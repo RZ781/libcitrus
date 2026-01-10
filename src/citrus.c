@@ -218,7 +218,7 @@ void CitrusGame_reset_piece(CitrusGame *game)
 	game->lock_delay = game->config.lock_delay;
 	game->move_reset_count = 0;
 	game->lowest_y = game->position.y;
-	game->last_rotated = false;
+	game->last_kick = -1;
 }
 
 // initialise a citrus game
@@ -260,7 +260,7 @@ bool CitrusGame_move_piece(CitrusGame *game, int dx, int dy)
 	if (collided) {
 		game->position = prev_position;
 	} else {
-		game->last_rotated = false;
+		game->last_kick = -1;
 	}
 	if (game->position.y < game->lowest_y) {
 		game->lowest_y = game->position.y;
@@ -293,7 +293,7 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	bool spin = false;
 	bool mini_spin = false;
 	if (game->current_piece == &citrus_pieces[CITRUS_COLOR_T]
-	    && game->last_rotated) {
+	    && game->last_kick != -1) {
 		// get front left corner
 		CitrusVector corner = { -1, 1 };
 		for (int i = 0; i < game->rotation; i++) {
@@ -317,7 +317,11 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		if (corners[0] == 2 && corners[1] >= 1) {
 			spin = true;
 		} else if (corners[0] == 1 && corners[1] == 2) {
-			mini_spin = true;
+			if (game->last_kick == 4) {
+				spin = true;
+			} else {
+				mini_spin = true;
+			}
 		}
 	}
 	game->current_piece = CitrusGame_next_piece(game);
@@ -429,7 +433,7 @@ bool CitrusGame_rotate_piece(CitrusGame *game, int n)
 		game->position = CitrusVector_add(prev_position, offset);
 		if (!CitrusGame_collided(game)) {
 			success = true;
-			game->last_rotated = true;
+			game->last_kick = i;
 			break;
 		}
 	}

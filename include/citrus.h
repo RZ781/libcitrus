@@ -109,7 +109,7 @@ typedef struct {
 	int line_clear_delay;
 	bool b2b;
 	int combo;
-	bool last_rotated;
+	int last_kick;
 } CitrusGame;
 
 typedef struct {
