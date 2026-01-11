@@ -304,10 +304,10 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		CitrusVector center =
 		    CitrusVector_add(game->position, (CitrusVector) { 1, 1 });
 		for (int i = 0; i < 4; i++) {
-			CitrusCell cell =
-			    CitrusGame_get_cell(game,
-						CitrusVector_add(center,
-								 corner));
+			CitrusCell cell = CitrusGame_get_cell(game,
+							      CitrusVector_add
+							      (center,
+							       corner));
 			if (cell.type == CITRUS_CELL_FULL
 			    || cell.type == CITRUS_CELL_WALL) {
 				corners[i / 2]++;
