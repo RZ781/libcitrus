@@ -236,6 +236,8 @@ void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 	game->hold_piece = NULL;
 	game->alive = true;
 	game->score = 0;
+	game->level = 1;
+	game->lines = 0;
 	game->line_clear_delay = 0;
 	game->b2b = false;
 	game->combo = 0;
@@ -388,7 +390,7 @@ void CitrusGame_lock_piece(CitrusGame *game)
 		}
 	}
 	score += 50 * game->combo;
-	game->score += score;
+	game->score += score * game->level;
 	if (game->config.action_text) {
 		game->config.action_text(game->action_text_data, cleared_lines,
 					 game->combo, game->b2b
@@ -400,6 +402,8 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	} else {
 		game->combo = 0;
 	}
+	game->lines += cleared_lines;
+	game->level = game->lines / 10 + 1;
 	if (CitrusGame_collided(game)) {
 		game->alive = false;
 	} else {

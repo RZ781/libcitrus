@@ -106,6 +106,8 @@ typedef struct {
 	int move_reset_count;
 	int lowest_y;
 	int score;
+	int level;
+	int lines;
 	int line_clear_delay;
 	bool b2b;
 	int combo;
