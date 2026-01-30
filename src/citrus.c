@@ -52,6 +52,8 @@ const CitrusGameConfig citrus_preset_modern = {
 	.line_clear_delay = 30,
 	.shadow = true,
 	.action_text = NULL,
+	.das = 10,
+	.arr = 3,
 };
 
 // preset config for delayless modern games
@@ -71,6 +73,8 @@ const CitrusGameConfig citrus_preset_delayless = {
 	.line_clear_delay = 0,
 	.shadow = true,
 	.action_text = NULL,
+	.das = 10,
+	.arr = 2,
 };
 
 // preset config for classic games, currently missing some features like no
@@ -91,6 +95,8 @@ const CitrusGameConfig citrus_preset_classic = {
 	.line_clear_delay = 30,
 	.shadow = false,
 	.action_text = NULL,
+	.das = 16,
+	.arr = 6
 };
 
 CitrusVector CitrusVector_add(CitrusVector a, CitrusVector b)
@@ -241,6 +247,8 @@ void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 	game->line_clear_delay = 0;
 	game->b2b = false;
 	game->combo = 0;
+	game->move_direction = 0;
+	game->move_frames = 0;
 	CitrusGame_reset_piece(game);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
@@ -459,9 +467,13 @@ void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 	bool moved = false;
 	switch (key) {
 	case CITRUS_KEY_LEFT:
+		game->move_direction = -1;
+		game->move_frames = 0;
 		moved = CitrusGame_move_piece(game, -1, 0);
 		break;
 	case CITRUS_KEY_RIGHT:
+		game->move_direction = 1;
+		game->move_frames = 0;
 		moved = CitrusGame_move_piece(game, 1, 0);
 		break;
 	case CITRUS_KEY_HARD_DROP:
@@ -505,6 +517,16 @@ void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 	}
 }
 
+// key is released
+void CitrusGame_key_up(CitrusGame* game, CitrusKey key) {
+	if (key == CITRUS_KEY_LEFT || key == CITRUS_KEY_RIGHT) {
+		int direction = key == CITRUS_KEY_RIGHT ? 1 : -1;
+		if (direction == game->move_direction) {
+			game->move_direction = 0;
+		}
+	}
+}
+
 // runs 60 times per second
 void CitrusGame_tick(CitrusGame *game)
 {
@@ -514,6 +536,16 @@ void CitrusGame_tick(CitrusGame *game)
 			CitrusGame_draw_piece(game, false);
 		}
 		return;
+	}
+	if (game->move_direction != 0) {
+		game->move_frames++;
+		if (game->move_frames == game->config.das) {
+			CitrusGame_move_piece(game, game->move_direction, 0);
+		}
+		if (game->move_frames == game->config.das + game->config.arr) {
+			CitrusGame_move_piece(game, game->move_direction, 0);
+			game->move_frames = game->config.das;
+		}
 	}
 	CitrusGame_draw_piece(game, true);
 	game->position.y--;

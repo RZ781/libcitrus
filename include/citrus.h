@@ -80,6 +80,8 @@ typedef struct {
 	int mini_t_spin_scores[4];	// score given by mini spins zero to triple
 	int line_clear_delay;	// ticks before next piece after clearing lines
 	bool shadow;		// whether or not to display shadows
+	int das;		// frames until movement keys start to repeat
+	int arr;		// frames between repetition of movement keys
 	// arguments: lines cleared, combo, b2b, all clear, spin, mini spin
 	void (*action_text)(void *, int, int, bool, bool, bool, bool);
 } CitrusGameConfig;
@@ -112,6 +114,8 @@ typedef struct {
 	bool b2b;
 	int combo;
 	int last_kick;
+	int move_direction;
+	int move_frames;
 } CitrusGame;
 
 typedef struct {
@@ -195,6 +199,15 @@ void CitrusGame_init(CitrusGame * game, CitrusCell * board,
  * @param key Key that has been pressed
  */
 void CitrusGame_key_down(CitrusGame * game, CitrusKey key);
+
+/**
+ * @brief Indicates a key has been released.
+ * This should be called by the client whenever a key is released.
+ *
+ * @param game Game where key was released
+ * @param key Key that has been released
+ */
+void CitrusGame_key_up(CitrusGame * game, CitrusKey key);
 
 /**
  * @brief Indicates a tick has passed.
