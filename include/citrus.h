@@ -116,6 +116,7 @@ typedef struct {
 	int last_kick;
 	int move_direction;
 	int move_frames;
+	bool soft_drop;
 } CitrusGame;
 
 typedef struct {

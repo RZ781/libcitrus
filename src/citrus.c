@@ -249,6 +249,7 @@ void CitrusGame_init(CitrusGame *game, CitrusCell *board,
 	game->combo = 0;
 	game->move_direction = 0;
 	game->move_frames = 0;
+	game->soft_drop = false;
 	CitrusGame_reset_piece(game);
 	for (int i = 0; i < config.width * config.full_height; i++) {
 		board[i].type = CITRUS_CELL_EMPTY;
@@ -482,6 +483,7 @@ void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 		CitrusGame_lock_piece(game);
 		break;
 	case CITRUS_KEY_SOFT_DROP:
+		game->soft_drop = true;
 		while (CitrusGame_move_piece(game, 0, -1))
 			game->score++;
 		break;
@@ -524,6 +526,8 @@ void CitrusGame_key_up(CitrusGame* game, CitrusKey key) {
 		if (direction == game->move_direction) {
 			game->move_direction = 0;
 		}
+	} else if (key == CITRUS_KEY_SOFT_DROP) {
+		game->soft_drop = false;
 	}
 }
 
@@ -546,6 +550,11 @@ void CitrusGame_tick(CitrusGame *game)
 			CitrusGame_move_piece(game, game->move_direction, 0);
 			game->move_frames = game->config.das;
 		}
+	}
+	if (game->soft_drop) {
+		while (CitrusGame_move_piece(game, 0, -1))
+			game->score++;
+		return;
 	}
 	CitrusGame_draw_piece(game, true);
 	game->position.y--;
