@@ -544,9 +544,13 @@ void CitrusGame_tick(CitrusGame *game)
 	if (game->move_direction != 0) {
 		game->move_frames++;
 		if (game->move_frames == game->config.das) {
-			CitrusGame_move_piece(game, game->move_direction, 0);
-		}
-		if (game->move_frames == game->config.das + game->config.arr) {
+			if (game->config.arr == 0) {
+				while (CitrusGame_move_piece(game, game->move_direction, 0));
+				game->move_frames = game->config.das - 1;
+			} else {
+				CitrusGame_move_piece(game, game->move_direction, 0);
+			}
+		} else if (game->move_frames == game->config.das + game->config.arr) {
 			CitrusGame_move_piece(game, game->move_direction, 0);
 			game->move_frames = game->config.das;
 		}
