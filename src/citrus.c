@@ -520,7 +520,8 @@ void CitrusGame_key_down(CitrusGame *game, CitrusKey key)
 }
 
 // key is released
-void CitrusGame_key_up(CitrusGame* game, CitrusKey key) {
+void CitrusGame_key_up(CitrusGame *game, CitrusKey key)
+{
 	if (key == CITRUS_KEY_LEFT || key == CITRUS_KEY_RIGHT) {
 		int direction = key == CITRUS_KEY_RIGHT ? 1 : -1;
 		if (direction == game->move_direction) {
@@ -545,12 +546,15 @@ void CitrusGame_tick(CitrusGame *game)
 		game->move_frames++;
 		if (game->move_frames == game->config.das) {
 			if (game->config.arr == 0) {
-				while (CitrusGame_move_piece(game, game->move_direction, 0));
+				while (CitrusGame_move_piece
+				       (game, game->move_direction, 0)) ;
 				game->move_frames = game->config.das - 1;
 			} else {
-				CitrusGame_move_piece(game, game->move_direction, 0);
+				CitrusGame_move_piece(game,
+						      game->move_direction, 0);
 			}
-		} else if (game->move_frames == game->config.das + game->config.arr) {
+		} else if (game->move_frames ==
+			   game->config.das + game->config.arr) {
 			CitrusGame_move_piece(game, game->move_direction, 0);
 			game->move_frames = game->config.das;
 		}
@@ -558,7 +562,6 @@ void CitrusGame_tick(CitrusGame *game)
 	if (game->soft_drop) {
 		while (CitrusGame_move_piece(game, 0, -1))
 			game->score++;
-		return;
 	}
 	CitrusGame_draw_piece(game, true);
 	game->position.y--;
