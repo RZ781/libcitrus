@@ -413,6 +413,9 @@ void CitrusGame_lock_piece(CitrusGame *game)
 	}
 	game->lines += cleared_lines;
 	game->level = game->lines / 10 + 1;
+	if (game->level > 20) {
+		game->level = 20;
+	}
 	if (CitrusGame_collided(game)) {
 		game->alive = false;
 	} else {
