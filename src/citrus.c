@@ -461,23 +461,13 @@ bool CitrusGame_rotate_piece(CitrusGame *game, int n)
 	return success;
 }
 
-// apply soft drop and das, which needs to be done every tick and keypress
-void CitrusGame_constant_movement(CitrusGame* game) {
-	if (game->move_direction != 0) {
-		game->move_frames++;
+// apply soft drop and zero arr, which needs to be done every tick and keypress
+void CitrusGame_constant_movement(CitrusGame *game)
+{
+	if (game->move_direction != 0 && game->config.arr == 0) {
 		if (game->move_frames == game->config.das) {
-			if (game->config.arr == 0) {
-				while (CitrusGame_move_piece
-				       (game, game->move_direction, 0)) ;
-				game->move_frames = game->config.das - 1;
-			} else {
-				CitrusGame_move_piece(game,
-						      game->move_direction, 0);
-			}
-		} else if (game->move_frames ==
-			   game->config.das + game->config.arr) {
-			CitrusGame_move_piece(game, game->move_direction, 0);
-			game->move_frames = game->config.das;
+			while (CitrusGame_move_piece
+			       (game, game->move_direction, 0)) ;
 		}
 	}
 	if (game->soft_drop) {
@@ -570,6 +560,16 @@ void CitrusGame_tick(CitrusGame *game)
 			CitrusGame_draw_piece(game, false);
 		}
 		return;
+	}
+	if (game->move_direction != 0) {
+		game->move_frames++;
+		if (game->move_frames == game->config.das) {
+			CitrusGame_move_piece(game, game->move_direction, 0);
+		}
+		if (game->move_frames >= game->config.das + game->config.arr) {
+			CitrusGame_move_piece(game, game->move_direction, 0);
+			game->move_frames = game->config.das;
+		}
 	}
 	CitrusGame_constant_movement(game);
 	CitrusGame_draw_piece(game, true);
