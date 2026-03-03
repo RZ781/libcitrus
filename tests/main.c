@@ -1,4 +1,4 @@
-/* Copyright (C) 2025 RZ781
+/* Copyright (C) 2025-2026 RZ781
  *
  * This file is part of libcitrus.
  *
@@ -93,4 +93,5 @@ int main(void)
 	hard_drop_test();
 	rotation_test();
 	movement_test();
+	srs_test();
 }

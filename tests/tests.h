@@ -1,4 +1,4 @@
-/* Copyright (C) 2025 RZ781
+/* Copyright (C) 2025-2026 RZ781
  *
  * This file is part of libcitrus.
  *
@@ -43,5 +43,6 @@ const CitrusPiece *loop_randomizer(void *data);
 void hard_drop_test(void);
 void movement_test(void);
 void rotation_test(void);
+void srs_test(void);
 
 #endif
