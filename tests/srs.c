@@ -38,7 +38,36 @@ typedef struct {
 } SRSTest;
 
 SRSTest test_cases[] = {
-	// TST
+	// T north to west kick 1
+	{
+	 .width = 3,
+	 .height = 3,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {0, 0, 0},
+	 .final = {1, 0, 3},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0,
+			   0, 0, 0,
+			   1, 1, 0,
+			   }
+	 },
+	// T north to west kick 2
+	{
+	 .width = 3,
+	 .height = 4,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {0, 0, 0},
+	 .final = {1, 1, 3},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0,
+			   0, 0, 0,
+			   0, 0, 0,
+			   1, 1, 1,
+			   }
+	 },
+	// T north to west kick 4 (TST)
 	{
 	 .width = 3,
 	 .height = 5,
@@ -54,7 +83,76 @@ SRSTest test_cases[] = {
 			   1, 1, 0,
 			   }
 	 },
-	// iso TSD
+	// T west to south kick 1
+	{
+	 .width = 3,
+	 .height = 3,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {1, 0, 3},
+	 .final = {0, 0, 2},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[9]) {}
+	 },
+	// T west to south kick 2
+	{
+	 .width = 3,
+	 .height = 4,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {1, 1, 3},
+	 .final = {0, 0, 2},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0,
+			   1, 0, 0,
+			   0, 0, 0,
+			   1, 0, 1,
+			   }
+	 },
+	// T west to south kick 3
+	{
+	 .width = 3,
+	 .height = 4,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {0, 0, 3},
+	 .final = {0, 2, 2},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0,
+			   0, 0, 1,
+			   0, 0, 1,
+			   0, 0, 0,
+			   }
+	 },
+	// T west to south kick 4
+	{
+	 .width = 3,
+	 .height = 4,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {1, 0, 3},
+	 .final = {0, 2, 2},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0,
+			   0, 0, 0,
+			   0, 0, 0,
+			   0, 1, 0,
+			   }
+	 },
+	// T south to east kick 1
+	{
+	 .width = 4,
+	 .height = 3,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {1, 0, 2},
+	 .final = {0, 0, 1},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 1, 0,
+			   0, 0, 0, 0,
+			   0, 0, 0, 0,
+			   }
+	 },
+	// T south to east kick 3 (iso TSD)
 	{
 	 .width = 3,
 	 .height = 5,
@@ -70,7 +168,7 @@ SRSTest test_cases[] = {
 			   1, 0, 1,
 			   }
 	 },
-	// neo TSD
+	// T south to east kick 3 (neo TSD)
 	{
 	 .width = 3,
 	 .height = 5,
@@ -86,7 +184,7 @@ SRSTest test_cases[] = {
 			   1, 0, 1,
 			   }
 	 },
-	// fin TSD
+	// T south to east kick 4 (fin TSD)
 	{
 	 .width = 3,
 	 .height = 5,
@@ -100,6 +198,67 @@ SRSTest test_cases[] = {
 			   0, 0, 0,
 			   1, 0, 0,
 			   1, 1, 0,
+			   }
+	 },
+	// T east to north kick 1
+	{
+	 .width = 4,
+	 .height = 3,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {0, 0, 1},
+	 .final = {1, 0, 0},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0, 0,
+			   1, 0, 0, 0,
+			   0, 0, 1, 0,
+			   }
+	 },
+	// T east to north kick 2
+	{
+	 .width = 4,
+	 .height = 4,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {0, 1, 1},
+	 .final = {1, 0, 0},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0, 0,
+			   1, 0, 0, 1,
+			   0, 0, 0, 0,
+			   0, 0, 0, 0,
+			   }
+	 },
+	// T east to north kick 3
+	{
+	 .width = 3,
+	 .height = 5,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {0, 0, 1},
+	 .final = {0, 2, 0},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 0, 0,
+			   0, 0, 0,
+			   0, 0, 0,
+			   1, 0, 0,
+			   0, 0, 0,
+			   }
+	 },
+	// T east to north kick 4
+	{
+	 .width = 4,
+	 .height = 5,
+	 .piece = CITRUS_COLOR_T,
+	 .spawn = {0, 0, 1},
+	 .final = {1, 2, 0},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
+	 .board = (int[]) {
+			   0, 1, 0, 0,
+			   0, 0, 0, 0,
+			   0, 0, 0, 0,
+			   1, 0, 0, 1,
+			   0, 0, 1, 0,
 			   }
 	 },
 };
