@@ -158,13 +158,13 @@ SRSTest test_cases[] = {
 	 .height = 5,
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 2, 2},
-	 .final = {0, 0, 3},
-	 .key = CITRUS_KEY_CLOCKWISE,
+	 .final = {0, 0, 1},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   1, 1, 1,
 			   0, 0, 0,
-			   1, 0, 0,
 			   0, 0, 1,
+			   1, 0, 0,
 			   1, 0, 1,
 			   }
 	 },
@@ -186,18 +186,18 @@ SRSTest test_cases[] = {
 	 },
 	// T south to east kick 4 (fin TSD)
 	{
-	 .width = 3,
+	 .width = 4,
 	 .height = 5,
 	 .piece = CITRUS_COLOR_T,
-	 .spawn = {0, 2, 2},
-	 .final = {1, 0, 3},
-	 .key = CITRUS_KEY_CLOCKWISE,
+	 .spawn = {1, 2, 2},
+	 .final = {0, 0, 1},
+	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
-			   0, 1, 1,
-			   0, 0, 0,
-			   0, 0, 0,
-			   1, 0, 0,
-			   1, 1, 0,
+			   1, 1, 1, 0,
+			   1, 0, 0, 0,
+			   1, 0, 0, 0,
+			   1, 0, 0, 1,
+			   1, 0, 1, 1,
 			   }
 	 },
 	// T east to north kick 1
