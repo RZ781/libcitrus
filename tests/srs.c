@@ -21,6 +21,8 @@
 #include "citrus.h"
 #include "tests.h"
 
+#define LENGTH(array) (sizeof(array)/sizeof(*(array)))
+
 typedef struct {
 	int x;
 	int y;
@@ -33,11 +35,10 @@ typedef struct {
 	CitrusColor piece;
 	Location spawn;
 	Location final;
-	CitrusKey key;
 	int *board;
 } SRSTest;
 
-SRSTest test_cases[] = {
+SRSTest anticlockwise_t_tests[] = {
 	// T north to west kick 1
 	{
 	 .width = 3,
@@ -45,7 +46,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 0, 0},
 	 .final = {1, 0, 3},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0,
 			   0, 0, 0,
@@ -59,7 +59,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 0, 0},
 	 .final = {1, 1, 3},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0,
 			   0, 0, 0,
@@ -74,7 +73,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 2, 0},
 	 .final = {1, 0, 3},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 1,
 			   0, 0, 0,
@@ -90,7 +88,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {1, 0, 3},
 	 .final = {0, 0, 2},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[9]) {}
 	 },
 	// T west to south kick 2
@@ -100,7 +97,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {1, 1, 3},
 	 .final = {0, 0, 2},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0,
 			   1, 0, 0,
@@ -115,7 +111,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 0, 3},
 	 .final = {0, 2, 2},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0,
 			   0, 0, 1,
@@ -130,7 +125,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {1, 0, 3},
 	 .final = {0, 2, 2},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0,
 			   0, 0, 0,
@@ -145,7 +139,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {1, 0, 2},
 	 .final = {0, 0, 1},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 1, 0,
 			   0, 0, 0, 0,
@@ -159,7 +152,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 2, 2},
 	 .final = {0, 0, 1},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   1, 1, 1,
 			   0, 0, 0,
@@ -175,7 +167,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 2, 2},
 	 .final = {0, 0, 1},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   1, 1, 0,
 			   0, 0, 0,
@@ -191,7 +182,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {1, 2, 2},
 	 .final = {0, 0, 1},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   1, 1, 1, 0,
 			   1, 0, 0, 0,
@@ -207,7 +197,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 0, 1},
 	 .final = {1, 0, 0},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0, 0,
 			   1, 0, 0, 0,
@@ -221,7 +210,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 1, 1},
 	 .final = {1, 0, 0},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0, 0,
 			   1, 0, 0, 1,
@@ -236,7 +224,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 0, 1},
 	 .final = {0, 2, 0},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 0, 0,
 			   0, 0, 0,
@@ -252,7 +239,6 @@ SRSTest test_cases[] = {
 	 .piece = CITRUS_COLOR_T,
 	 .spawn = {0, 0, 1},
 	 .final = {1, 2, 0},
-	 .key = CITRUS_KEY_ANTICLOCKWISE,
 	 .board = (int[]) {
 			   0, 1, 0, 0,
 			   0, 0, 0, 0,
@@ -263,51 +249,77 @@ SRSTest test_cases[] = {
 	 },
 };
 
-void srs_test(void)
+static void reflect_location(Location *location, SRSTest *test)
 {
-	int n_test_cases = sizeof(test_cases) / sizeof(*test_cases);
-	for (int i = 0; i < n_test_cases; i++) {
-		// initialise game with blank board
-		SRSTest test_case = test_cases[i];
-		CitrusGameConfig config = test_config;
-		config.width = test_case.width;
-		config.height = test_case.height;
-		CitrusGame game;
-		LoopRandomizer randomizer_data = {.length = 1,.position =
-			    0,.pieces =
-			    (const CitrusPiece *[]) {citrus_pieces +
-						     test_case.piece}
-		};
-		CitrusGame_init(&game, board, next_piece_queue, config,
-				&randomizer_data, NULL);
-		// initialise board
-		for (int x = 0; x < test_case.width; x++) {
-			for (int y = 0; y < test_case.height; y++) {
-				CitrusCell cell;
-				if (test_case.board[y * test_case.width + x]) {
-					cell.color = CITRUS_COLOR_O;
-					cell.type = CITRUS_CELL_FULL;
-				} else {
-					cell.type = CITRUS_CELL_EMPTY;
-				}
-				board[(test_case.height - y -
-				       1) * test_case.width + x] = cell;
+	int piece_width = citrus_pieces[test->piece].width;
+	location->x = test->width - location->x - piece_width;
+	location->rotation = (4 - location->rotation) % 4;
+}
+
+static void run_test(SRSTest test_case, bool reflect)
+{
+	// initialise game with blank board
+	CitrusGameConfig config = test_config;
+	config.width = test_case.width;
+	config.height = test_case.height;
+	CitrusGame game;
+	LoopRandomizer randomizer_data = {.length = 1,.position = 0,.pieces =
+		    (const CitrusPiece *[]) {citrus_pieces + test_case.piece}
+	};
+	CitrusGame_init(&game, board, next_piece_queue, config,
+			&randomizer_data, NULL);
+	// initialise board
+	for (int x = 0; x < test_case.width; x++) {
+		for (int y = 0; y < test_case.height; y++) {
+			CitrusCell cell;
+			if (test_case.board[y * test_case.width + x] == 1) {
+				cell.color = CITRUS_COLOR_O;
+				cell.type = CITRUS_CELL_FULL;
+			} else {
+				cell.type = CITRUS_CELL_EMPTY;
 			}
-		}
-		// run test
-		game.position.x = test_case.spawn.x;
-		game.position.y = test_case.spawn.y;
-		game.rotation = test_case.spawn.rotation;
-		CitrusGame_key_down(&game, test_case.key);
-		if (game.position.x != test_case.final.x
-		    || game.position.y != test_case.final.y
-		    || game.rotation != test_case.final.rotation) {
-			fprintf(stderr, "srs_test(): test_cases[%i]: expected "
-				"position (%i, %i, %i), got (%i, %i, %i)\n",
-				i, test_case.final.x, test_case.final.y,
-				test_case.final.rotation, game.position.x,
-				game.position.y, game.rotation);
-			abort();
+			int game_y = test_case.height - y - 1;
+			int game_x = x;
+			if (reflect) {
+				game_x = test_case.width - x - 1;
+			}
+			board[game_y * test_case.width + game_x] = cell;
 		}
 	}
+	// run test
+	CitrusKey key = CITRUS_KEY_ANTICLOCKWISE;
+	if (reflect) {
+		reflect_location(&test_case.spawn, &test_case);
+		reflect_location(&test_case.final, &test_case);
+		key = CITRUS_KEY_CLOCKWISE;
+	}
+	game.position.x = test_case.spawn.x;
+	game.position.y = test_case.spawn.y;
+	game.rotation = test_case.spawn.rotation;
+	CitrusGame_key_down(&game, key);
+	if (game.position.x != test_case.final.x
+	    || game.position.y != test_case.final.y
+	    || game.rotation != test_case.final.rotation) {
+		fprintf(stderr,
+			"run_test(): expected position (%i, %i, %i), "
+			"got (%i, %i, %i)\n", test_case.final.x,
+			test_case.final.y, test_case.final.rotation,
+			game.position.x, game.position.y, game.rotation);
+		abort();
+	}
+}
+
+static void run_tests(SRSTest *test_cases, int n_test_cases, bool reflect)
+{
+	for (int i = 0; i < n_test_cases; i++) {
+		run_test(test_cases[i], false);
+		if (reflect) {
+			run_test(test_cases[i], true);
+		}
+	}
+}
+
+void srs_test(void)
+{
+	run_tests(anticlockwise_t_tests, LENGTH(anticlockwise_t_tests), true);
 }
