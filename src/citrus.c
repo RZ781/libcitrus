@@ -616,7 +616,7 @@ bool CitrusGame_is_alive(CitrusGame *game)
 }
 
 // initialise a bag with a fixed seed
-void CitrusBagRandomizer_init(CitrusBagRandomizer *bag, int seed)
+void CitrusBagRandomizer_init(CitrusBagRandomizer *bag, uint64_t seed)
 {
 	bag->count = 0;
 	for (int i = 0; i < 7; i++) {
@@ -647,7 +647,8 @@ const CitrusPiece *CitrusBagRandomizer_randomizer(void *data)
 }
 
 // initialise a classic randomiser with a fixed seed
-void CitrusClassicRandomizer_init(CitrusClassicRandomizer *randomizer, int seed)
+void CitrusClassicRandomizer_init(CitrusClassicRandomizer *randomizer,
+				  uint64_t seed)
 {
 	randomizer->state = seed;
 	randomizer->previous_piece = -1;

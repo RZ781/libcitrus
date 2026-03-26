@@ -254,7 +254,7 @@ const CitrusPiece *CitrusGame_get_next_piece(CitrusGame * game, int i);
  * @param bag Struct to be initialized
  * @param seed Seed for the random number generator
  */
-void CitrusBagRandomizer_init(CitrusBagRandomizer * bag, int seed);
+void CitrusBagRandomizer_init(CitrusBagRandomizer * bag, uint64_t seed);
 
 /**
  * @brief Returns the next piece in the bag.
@@ -271,7 +271,7 @@ const CitrusPiece *CitrusBagRandomizer_randomizer(void *data);
  * @param seed Seed for the random number generator
  */
 void CitrusClassicRandomizer_init(CitrusClassicRandomizer * randomizer,
-				  int seed);
+				  uint64_t seed);
 
 /**
  * @brief Returns the next piece.
